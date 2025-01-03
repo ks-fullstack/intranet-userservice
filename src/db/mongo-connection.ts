@@ -9,9 +9,9 @@ class MongoConnection {
   private options: IDBSettings;
 
   constructor() {
-    const username = APIConfig.config.dbUsername;
-    const password = APIConfig.config.dbPassword;
-    const dbName = APIConfig.config.dbName;
+    const username: string = process.env.DB_USERNAME || "";
+    const password: string = process.env.DB_PASSWORD || "";
+    const dbName: string = APIConfig.config.dbName;
 
     this.connectionStr = APIConfig.config.dbConnectionStr.replace("$username$", username)
         .replace("$password$", password).replace("$dbname$", dbName);
