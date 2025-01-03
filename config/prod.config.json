@@ -1,0 +1,34 @@
+{
+  "apiBasePath": "/userservice/api",
+  "dbConnectionStr": "mongodb+srv://$username$:$password$@cluster0.nse481o.mongodb.net/$dbname$",
+  "dbName": "intranet-prod",
+  "dbUsername": "ksfullstack",
+  "dbPassword": "Fu11stack",
+  "disableLogs": false,
+  "cookieSettings": {
+    "maxAge": 28800000,
+    "httpOnly": true,
+    "secure": false,
+    "sameSite": "strict"
+  },
+  "dbSettings": {
+    "connectTimeoutMS": 5000,
+    "socketTimeoutMS": 20000,
+    "heartbeatFrequencyMS": 10000,
+    "retryWrites": true,
+    "ssl": true,
+    "appname": "MongoDB%20Compass",
+    "replicaSet": "atlas-ua1jyo-shard-0"
+  },
+  "jwtSettings": {
+    "expiresIn": "1h",
+    "refreshTokenExpiresIn": "8h"
+  },
+  "securitySettings": {
+    "allowedOrigin": "http://localhost:5000",
+    "allowedMethod": "GET, POST, PUT, PATCH, DELETE",
+    "allowHeaders": "X-Requested-With, Content-Type",
+    "allowCredentials": false
+  },
+  "serviceName": "userservice"
+}
