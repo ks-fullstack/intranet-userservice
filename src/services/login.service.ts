@@ -35,7 +35,7 @@ class LoginService {
 
     const loginPayload: IUserFilter = { ...req.body };
     // Get user data
-    let user = await userRepo.findUser({ userId: loginPayload.userId }, "password loginAttempt isLocked refreshToken");
+    let user = await userRepo.findUser({ userId: loginPayload.userId }, ["password", "loginAttempt", "isLocked", "refreshToken"]);
     const userResObj = user?.toObject();
 
     if (!userResObj) {

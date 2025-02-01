@@ -1,6 +1,7 @@
 import { Express } from "express";
 import { IRoutes } from "../interface/router.interface";
 import healthRouter from "./health.router";
+import otpRouter from "./otp.router";
 import roleRoutes from "./role.router";
 import userRoutes from "./user.router";
 import userProfileRouter from "./user-profile.router";
@@ -26,6 +27,10 @@ class MainRoute {
         path: apiBasePath + "/role",
         router: roleRoutes.router,
       },
+      {
+        path: apiBasePath + "/otp",
+        router: otpRouter.router,
+      }
     ];
   }
 

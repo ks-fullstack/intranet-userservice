@@ -1,4 +1,4 @@
-import { IUser, IUserFilter, IUserUpdate } from "../interface/user.interface";
+import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
 import userModel from "../models/user.model";
 
 class UserRepo {
@@ -35,8 +35,8 @@ class UserRepo {
     return userModel.deleteMany(filterExp);
   }
 
-  public findUser(filterExp: IUserFilter, selectFields: string = "") {
-    let selectFieldsExp = "-_id userId emailId role " + selectFields;
+  public findUser(filterExp: IUserFilter, selectFields?: UserFieldType) {
+    let selectFieldsExp = "-_id userId emailId role " + (selectFields?.join(" ") || "");
     return userModel.findOne(filterExp).select(selectFieldsExp);
   }
 }

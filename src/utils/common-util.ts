@@ -23,4 +23,17 @@ const setCookies = (res: Response, cookieName: string, cookieValue: string) => {
   res.cookie(cookieName, cookieValue, APIConfig.config.cookieSettings); // 8 hours
 }
 
-export { readJSONFile, getCookies, setCookies };
+const generateOTP = (length: number = 6, isAlfaNumeric: boolean = false): string => {
+  let chars: string = '0123456789', otp: string = '';
+  if (isAlfaNumeric) {
+    chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  }
+
+  for (let i = 0; i < length; i++) {
+    otp += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return otp;
+}
+
+export { readJSONFile, getCookies, setCookies, generateOTP };
