@@ -42,3 +42,5 @@ export interface ILogin {
   userId: string;
   password: string;
 }
+
+export type UserFieldType = Array<keyof IUser>;

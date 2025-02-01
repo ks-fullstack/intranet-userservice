@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { IRole } from "../interface/role.interface";
 
-const roleSchema: Schema = new Schema(
+const roleSchema: Schema<IRole> = new Schema(
   {
     roleId: {
       required: true,
