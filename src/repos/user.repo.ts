@@ -2,7 +2,7 @@ import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface/use
 import userModel from "../models/user.model";
 
 class UserRepo {
-  private defaultSelectedFields: string = "-_id userId emailId role isActive createdBy updatedBy ";
+  private defaultSelectedFields: string = "_id userId emailId role isActive createdBy updatedBy ";
 
   public getOne(_id: string, selectedFields?: UserFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
