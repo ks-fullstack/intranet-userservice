@@ -25,7 +25,7 @@ class MongoConnection {
     });
 
     MongoConnection._connect.on("reconnected", () => {
-      console.log("MongoDB Connection Reestablished");
+      console.log("MongoDB Connection Re-established");
     });
 
     MongoConnection._connect.on("disconnected", () => {

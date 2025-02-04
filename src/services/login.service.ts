@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import AppConstant from "../constants/app.constant";
-import { IServiceResponse } from "../interface/common.interface";
+import { AppConstants } from "../constants/app.constant";
+import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
 import { IUserFilter } from "../interface/user.interface";
 import userRepo from "../repos/user.repo";
 import userProfileRepo from "../repos/user-profile.repo";
@@ -12,9 +12,11 @@ import { generateToken, validateToken } from "../utils/jwt-util";
 import validationService from "./validation.service";
 
 class LoginService {
-  public async signUp(req: Request) {
+  public async signUp(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     validationService.validatePostPayload(req);
-
+    if(req.user) {
+      req.body.createdBy = req.user;
+    }
     //Register user
     const userResObj = await userRepo.create(req.body);
     if(userResObj) {
@@ -25,12 +27,12 @@ class LoginService {
     const result: IServiceResponse = {
       count: Array.isArray(userResObj) ? userResObj.length : 1,
       data: userResObj,
-      message: AppConstant.CreateResponseMessage,
+      message: AppConstants.CreateResponseMessage,
     };
     return result;
   }
 
-  public async signIn(req: Request, res: Response) {
+  public async signIn(req: Request, res: Response): Promise<IServiceResponse> {
     validationService.validatePostPayload(req);
 
     const loginPayload: IUserFilter = { ...req.body };
@@ -84,8 +86,9 @@ class LoginService {
     return result;
   }
 
-  public async signOut(req: Request) {
+  public async signOut(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     validationService.validatePostPayload(req);
+    req.body.updatedBy = req.user;
 
     const logoutPayload: IUserFilter = { ...req.body };
     await userRepo.update(logoutPayload, { token: "", refreshToken: "" });
@@ -95,8 +98,9 @@ class LoginService {
     return result;
   }
 
-  public async unlockUser(req: Request) {
+  public async unlockUser(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     validationService.validatePostPayload(req);
+    req.body.updatedBy = req.user;
 
     const unlockPayload: IUserFilter = { ...req.body };
     await userRepo.update(unlockPayload, { isLocked: false, loginAttempt: 0, token: "", refreshToken: "" });
@@ -106,7 +110,7 @@ class LoginService {
     return result;
   }
 
-  public async refreshToken(req: Request) {
+  public async refreshToken(req: Request): Promise<IServiceResponse> {
     const refreshToken: string = getCookies(req).refreshToken || "";
     if(!refreshToken) {
       throw new CustomError("Invalid request", 401);

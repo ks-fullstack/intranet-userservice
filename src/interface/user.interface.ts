@@ -21,7 +21,7 @@ export interface IBaseUser {
 export interface IUserFilter extends IUserUpdate {
   _id?: string;
   userId?: string;
-  createdBy?: IUser;
+  createdBy?: IBaseUser;
 }
 
 export interface IUserUpdate {
@@ -35,7 +35,7 @@ export interface IUserUpdate {
   loginAttempt?: number;
   token?: string;
   refreshToken?: string;
-  updatedBy?: IUser;
+  updatedBy?: IBaseUser;
 }
 
 export interface ILogin {

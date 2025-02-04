@@ -1,14 +1,18 @@
-import { IUserProfile, IUserProfileFilter, IUserProfileUpdate } from "../interface/user-profile.interface";
+import { IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldType } from "../interface/user-profile.interface";
 import userProfile from "../models/user-profile.model";
 
 class UserProfileRepo {
-  public getOne(id: string) {
-    return userProfile.findById({id});
+  private defaultSelectedFields: string = "-_id userId firstname lastname gender dob profilePic emailId role isActive createdBy updatedBy ";
+
+  public getOne(id: string, selectedFields?: UserProfileFieldType) {
+    const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
+    return userProfile.findById({id}).select(selectedFieldsExp);
   }
 
-  public getAll(filter: string) {
+  public getAll(filter: string, selectedFields?: UserProfileFieldType) {
     const filterExp: IUserProfileFilter = filter ? JSON.parse(filter) : {};
-    return userProfile.find(filterExp);
+    const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
+    return userProfile.find(filterExp).select(selectedFieldsExp);
   }
 
   public getCount(filter: string) {
@@ -16,23 +20,25 @@ class UserProfileRepo {
     return userProfile.find(filterExp).estimatedDocumentCount();
   }
 
-  public create(inputData: IUserProfile) {
-    const saveData = new userProfile(inputData);
-    return new Promise((resolve, reject) => {
-      saveData.save().then((res) => {
-        resolve(res);
-      }).catch((err) => {
-        reject(err);
-      });
-    });
+  public create(inputData: IUserProfile | IUserProfile[]) {
+    return userProfile.insertMany(inputData);
   }
 
   public update(filterExp: IUserProfileFilter, inputData: IUserProfileUpdate) {
+    return userProfile.updateMany(filterExp, inputData, {new: true});
+  }
+
+  public findOneAndUpdate(filterExp: IUserProfileFilter, inputData: IUserProfileUpdate) {
     return userProfile.findOneAndUpdate(filterExp, inputData, {new: true});
   }
 
   public delete(filterExp: IUserProfileFilter) {
     return userProfile.deleteMany(filterExp);
+  }
+
+  public findUser(filterExp: IUserProfileFilter, selectedFields?: UserProfileFieldType) {
+    const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
+    return userProfile.findOne(filterExp).select(selectedFieldsExp);
   }
 }
 

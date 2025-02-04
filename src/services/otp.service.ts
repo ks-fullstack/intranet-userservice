@@ -1,121 +1,105 @@
-import { Request } from "express";
-import AppConstant from "../constants/app.constant";
-import { IServiceResponse } from "../interface/common.interface";
-import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP } from "../interface/otp.interface";
+import { AppConstants, OTPConstants} from "../constants/app.constant";
+import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
+import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../interface/otp.interface";
 import otpRepo from "../repos/otp.repo";
 import userRepo from "../repos/user.repo";
 import CustomError from "../utils/custom.error";
 import { generateOTP } from "../utils/common-util";
+import validationService from "./validation.service";
 
 class OTPService {
-  public async getOne(req: Request): Promise<IServiceResponse> {
+  public async getOne(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     const recordId = req.params.id;
-    const resObj = await otpRepo.getOne(recordId);
+    const { fields } = req.query;
+    const fieldSelection: OTPFieldType = typeof fields === 'string' ? fields.split(",") as OTPFieldType : [];
+    const resObj = await otpRepo.getOne(recordId, fieldSelection);
     const result: IServiceResponse = {
       count: 1,
       data: resObj,
-      message: 1 + AppConstant.GetResponseMessage,
+      message: 1 + AppConstants.GetResponseMessage,
     };
     return result;
   }
 
-  public async getAll(req: Request): Promise<IServiceResponse> {
-    const filterExp = req.params.filter || "";
-    const resObj = await otpRepo.getAll(filterExp);
+  public async getAll(req: IAuthenticatedRequest): Promise<IServiceResponse> {
+    const { fields, filter } = req.query;
+    const filterExp =  typeof filter === 'string' ? filter : "";
+    const fieldSelection: OTPFieldType = typeof fields === 'string' ? fields.split(",") as OTPFieldType : [];
+    const resObj = await otpRepo.getAll(filterExp, fieldSelection);
     const result: IServiceResponse = {
       count: resObj.length,
       data: resObj,
-      message: resObj.length + AppConstant.GetResponseMessage,
+      message: resObj.length + AppConstants.GetResponseMessage,
     };
     return result;
   }
 
-  public async getCount(req: Request): Promise<IServiceResponse> {
+  public async getCount(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     const filterExp = req.params.filter || "";
     const resObj = await otpRepo.getCount(filterExp);
     const result: IServiceResponse = {
       count: resObj,
       data: resObj,
-      message: resObj + AppConstant.GetResponseMessage,
+      message: resObj + AppConstants.GetResponseMessage,
     };
     return result;
   }
 
-  public async create(req: Request): Promise<IServiceResponse> {
-    const data: IOTP = req.body;
-    if (Array.isArray(data)) {
-      if (data.length === 0) {
-        throw new CustomError("Empty payload", 422);
-      }
-    } else {
-      if (!data || (data && Object.keys(data).length === 0)) {
-        throw new CustomError("Empty payload", 422);
-      }
-    }
+  public async create(req: IAuthenticatedRequest): Promise<IServiceResponse> {
+    validationService.validatePostPayload(req);
 
+    const inputData: IOTP | IOTP[] = req.body;
     // Generate OTP
-    if (Array.isArray(data)) {
-      data.forEach((item) => {
+    if (Array.isArray(inputData)) {
+      inputData.forEach((item) => {
         item.otp = generateOTP(6, true);
+        item.createdBy = req.user;
       });
     } else {
-      data.otp = generateOTP(6, true);
+      inputData.otp = generateOTP(6, true);
+      inputData.createdBy = req.user;
     }
 
-    const resObj = await otpRepo.create(data);
+    const resObj = await otpRepo.create(inputData);
     const result: IServiceResponse = {
       count: Array.isArray(resObj) ? resObj.length : 1,
       data: resObj,
-      message: AppConstant.GetResponseMessage,
+      message: AppConstants.GetResponseMessage,
     };
     return result;
   }
 
-  public async update(req: Request): Promise<IServiceResponse> {
+  public async update(req: IAuthenticatedRequest): Promise<IServiceResponse> {
+    validationService.validateFiterExpression(req);
+    validationService.validateUpdateDataPayload(req);
+
     const filterExp: IOTPFilter = req.body.filterExp || "";
     const requestedDataToUpdate: IOTPUpdate = req.body.data || "";
-    if (!filterExp || (filterExp && Object.keys(filterExp).length === 0)) {
-      throw new CustomError("Filter expression required", 422);
-    } else if (
-      !requestedDataToUpdate ||
-      (requestedDataToUpdate && Object.keys(requestedDataToUpdate).length === 0)
-    ) {
-      throw new CustomError("Payload required to update data", 422);
-    } else {
-      const resObj = await otpRepo.update(filterExp, requestedDataToUpdate);
-      let updatedRecordCount = 0;
-      if (resObj) {
-        updatedRecordCount = Array.isArray(resObj) ? resObj.length : 1;
-      }
-      const result: IServiceResponse = {
-        count: updatedRecordCount,
-        data: resObj,
-        message: updatedRecordCount + AppConstant.UpdateResponeMessage,
-      };
-      return result;
-    }
+    requestedDataToUpdate.updatedBy = req.user;
+    const resObj = await otpRepo.update(filterExp, requestedDataToUpdate);
+    const result: IServiceResponse = {
+      count: resObj.modifiedCount,
+      data: resObj,
+      message: resObj.modifiedCount + AppConstants.UpdateResponeMessage,
+    };
+    return result;
   }
 
-  public async delete(req: Request): Promise<IServiceResponse> {
+  public async delete(req: IAuthenticatedRequest): Promise<IServiceResponse> {
+    validationService.validateFiterExpression(req);
     const filterExp: IOTPFilter = req.body.filterExp || "";
-    if (!filterExp || (filterExp && Object.keys(filterExp).length === 0)) {
-      throw new CustomError("Filter expression required", 422);
-    } else {
-      const resObj = await otpRepo.delete(filterExp);
-      const result: IServiceResponse = {
-        count: resObj.deletedCount,
-        message: resObj.deletedCount + AppConstant.DeleteResponeMessage,
-      };
-      return result;
-    }
+    const resObj = await otpRepo.delete(filterExp);
+    const result: IServiceResponse = {
+      count: resObj.deletedCount,
+      message: resObj.deletedCount + AppConstants.DeleteResponeMessage,
+    };
+    return result;
   }
 
-  public async sendOTP(req: Request): Promise<IServiceResponse> {
+  public async sendOTP(req: IAuthenticatedRequest): Promise<IServiceResponse> {
+    validationService.validatePostPayload(req);
     const data: IOTP = req.body;
     let otpRes = null;
-    if (!data || (data && Object.keys(data).length === 0)) {
-      throw new CustomError("Empty payload", 422);
-    }
 
     const userRes = await userRepo.findUser({ userId: data.userId }, [ "isLocked" ]);
     if (!userRes) {
@@ -132,27 +116,22 @@ class OTPService {
     
     if (!otpRes) {
       data.otp = generateOTP(6, true);
+      data.createdBy = req.user;
       otpRes = await otpRepo.create(data);
     }
 
     const result: IServiceResponse = {
-      count: otpRes ? 1 : 0,
-      data: otpRes,
-      message: AppConstant.GetResponseMessage,
+      message: "OTP send successfully, ",
     };
     return result;
   }
 
-  public async verifyOTP(req: Request): Promise<IServiceResponse> {
+  public async verifyOTP(req: IAuthenticatedRequest): Promise<IServiceResponse> {
+    validationService.validatePostPayload(req);
     const body: IVerifyOTP = req.body;
-    if (!body || (body && Object.keys(body).length === 0)) {
-      throw new CustomError("Empty payload", 422);
-    }
-    const resObj = await otpRepo.verifyOTP(body, { isVerfied: true });
+    const resObj = await otpRepo.verifyOTP(body, { isVerfied: true, updatedBy: req.user });
     const result: IServiceResponse = {
-      count: resObj ? 1 : 0,
-      data: resObj,
-      message: resObj ? AppConstant.GetResponseMessage : "OTP verification failed",
+      message: resObj ? OTPConstants.OTPVerifiedMessage : OTPConstants.OTPVerificationFailedMessage,
     };
     return result;
   }

@@ -1,3 +1,6 @@
+import { Request } from "express";
+import { IBaseUser } from "./user.interface";
+
 export interface IServiceResponse {
   data?: any;
   message: string;
@@ -13,4 +16,8 @@ export interface IServiceResponseExtend extends IServiceResponse {
 export interface IJWTVerifyToken {
   isValid: boolean;
   data: any | undefined;
+}
+
+export interface IAuthenticatedRequest extends Request {
+  user?: IBaseUser;
 }
