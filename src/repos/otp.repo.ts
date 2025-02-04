@@ -2,13 +2,17 @@ import otp from "../models/otp.model";
 import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../interface/otp.interface";
 
 class OTPRepo {
-  public getOne(id: string) {
-    return otp.findOne({ id });
+  private defaultSelectedFields: string = "-_id userId otpId otp isVerified expiryTime ";
+
+  public getOne(id: string, selectedFields?: OTPFieldType) {
+    const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
+    return otp.findOne({ id }).select(selectedFieldsExp);
   }
 
-  public getAll(filter: string) {
+  public getAll(filter: string, selectedFields?: OTPFieldType) {
     const filterExp: IOTPFilter = filter ? JSON.parse(filter) : {};
-    return otp.find({ filterExp });
+    const selectFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
+    return otp.find({ filterExp }).select(selectFieldsExp);
   }
 
   public getCount(filter: string) {
@@ -16,21 +20,15 @@ class OTPRepo {
     return otp.find(filterExp).estimatedDocumentCount();
   }
 
-  public create(inputData: IOTP) {
-    const saveData = new otp(inputData);
-    return new Promise((resolve, reject) => {
-      saveData
-        .save()
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+  public create(inputData: IOTP | IOTP[]) {
+    return otp.insertMany(inputData);
   }
 
   public update(filterExp: IOTPFilter, inputData: IOTPUpdate) {
+    return otp.updateMany(filterExp, inputData, { new: true });
+  }
+
+  public findOneAndUpdate(filterExp: IOTPFilter, inputData: IOTPUpdate) {
     return otp.findOneAndUpdate(filterExp, inputData, { new: true });
   }
 
@@ -39,12 +37,12 @@ class OTPRepo {
   }
 
   public findUserOTP(filterExp: IOTPFilter, selectFields?: OTPFieldType) {
-    let selectFieldsExp = "-_id userId otpId otp isVerified expiryTime " + (selectFields?.join(" ") || "");
+    const selectFieldsExp = this.defaultSelectedFields + (selectFields?.join(" ") || "");
     return otp.findOne(filterExp).select(selectFieldsExp);
   }
 
   public verifyOTP(filterExp: IVerifyOTP, inputData: IOTPUpdate) {
-    return otp.findOneAndUpdate(filterExp, inputData);
+    return otp.updateMany(filterExp, inputData);
   }
 }
 

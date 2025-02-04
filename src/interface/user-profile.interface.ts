@@ -35,3 +35,5 @@ export interface IUserProfileUpdate {
   isActive?: boolean;
   updatedBy?: IBaseUser;
 }
+
+export type UserProfileFieldType = Array<keyof IUserProfile>;

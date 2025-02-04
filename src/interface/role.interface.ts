@@ -21,3 +21,5 @@ export interface IRoleUpdate {
   description?: string;
   updatedBy?: IBaseUser;
 }
+
+export type RoleFieldType = Array<keyof IRole>;

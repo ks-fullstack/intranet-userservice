@@ -20,7 +20,7 @@
   },
   "jwtSettings": {
     "expiresIn": "1h",
-    "refreshTokenExpiresIn": "1d"
+    "refreshTokenExpiresIn": "8h"
   },
   "securitySettings": {
     "allowedOrigin": "http://localhost:5000; http://localhost:4200",
