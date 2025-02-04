@@ -2,11 +2,11 @@ import { IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldT
 import userProfile from "../models/user-profile.model";
 
 class UserProfileRepo {
-  private defaultSelectedFields: string = "-_id userId firstname lastname gender dob profilePic emailId role isActive createdBy updatedBy ";
+  private defaultSelectedFields: string = "_id userId firstname lastname gender dob profilePic emailId role isActive createdBy updatedBy ";
 
-  public getOne(id: string, selectedFields?: UserProfileFieldType) {
+  public getOne(_id: string, selectedFields?: UserProfileFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
-    return userProfile.findById({id}).select(selectedFieldsExp);
+    return userProfile.findById({_id}).select(selectedFieldsExp);
   }
 
   public getAll(filter: string, selectedFields?: UserProfileFieldType) {

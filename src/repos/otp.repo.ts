@@ -4,9 +4,9 @@ import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../inter
 class OTPRepo {
   private defaultSelectedFields: string = "-_id userId otpId otp isVerified expiryTime ";
 
-  public getOne(id: string, selectedFields?: OTPFieldType) {
+  public getOne(_id: string, selectedFields?: OTPFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
-    return otp.findOne({ id }).select(selectedFieldsExp);
+    return otp.findOne({ _id }).select(selectedFieldsExp);
   }
 
   public getAll(filter: string, selectedFields?: OTPFieldType) {
