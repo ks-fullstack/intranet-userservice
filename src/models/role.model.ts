@@ -35,7 +35,7 @@ const roleSchema: Schema<IRole> = new Schema(
 );
 
 roleSchema.index(
-  { postId: 1 },
+  { roleId: 1 },
   { unique: true },
 );
 
