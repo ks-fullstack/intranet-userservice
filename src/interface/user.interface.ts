@@ -1,6 +1,6 @@
 export interface IUser extends IBaseUser {
   password: string | undefined;
-  isActive: boolean;
+  isActive: boolean | undefined;
   isLocked: boolean | undefined;
   isVerifiedUser: boolean;
   lastLogin?: string;

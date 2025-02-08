@@ -37,7 +37,7 @@ class UserRepo {
   }
 
   public findUser(filterExp: IUserFilter, selectedFields?: UserFieldType) {
-    const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
+    const selectedFieldsExp = "userId emailId role " + (selectedFields?.join(" ") || "");
     return userModel.findOne(filterExp).select(selectedFieldsExp);
   }
 }

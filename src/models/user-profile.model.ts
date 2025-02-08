@@ -4,11 +4,9 @@ import { IUserProfile } from "../interface/user-profile.interface";
 
 const userProfileSchema: Schema<IUserProfile> = new Schema(
   {
-    userId: {
+    userRef: {
       required: true,
-      trim: true,
-      type: String,
-      unique: true,
+      type: Object,
     },
     firstname: {
       required: true,

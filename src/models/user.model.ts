@@ -76,14 +76,15 @@ const userSchema: Schema<IUser> = new Schema(
 userSchema.index({ userId: 1, emailId: 1, mobileNo: 1 }, { unique: true });
 
 // Encrypt User PIP Info & password
-userSchema.pre("save", async function (next) {
-  const user = this;
-
-  if(user.isModified("password")) {
-    let password: string = user.password?.toString() || '';
-    user.password = await bcrypt.hash(password, hashRounds);
+userSchema.pre("insertMany", async function (next, docs: IUser | IUser[]) {
+  if (!Array.isArray(docs)) {
+    docs = [docs];
   }
-
+  for (const doc of docs) {
+    if (doc.password) {
+      doc.password = await bcrypt.hash(doc.password, hashRounds);
+    }
+  }
   next();
 });
 
