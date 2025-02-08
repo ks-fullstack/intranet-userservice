@@ -2,6 +2,7 @@ import { Gender } from "../constants/app.enum";
 import { IBaseUser } from "./user.interface";
 
 export interface IUserProfile extends IBaseUser {
+  userRef: IBaseUser;
   firstname: string;
   middlename: string;
   lastname: string;
@@ -19,6 +20,7 @@ export interface IUserProfile extends IBaseUser {
 
 export interface IUserProfileFilter extends IUserProfileUpdate {
   _id?: string;
+  userRef?: IBaseUser;
 }
 
 export interface IUserProfileUpdate {
