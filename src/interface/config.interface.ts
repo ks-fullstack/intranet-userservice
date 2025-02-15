@@ -10,6 +10,7 @@ export interface IConfig {
   dbPassword: string;
   dbSettings: IDBSettings;
   disableLogs: boolean;
+  otpExpiresInMin: number;
   jwtSettings: IJWTSettings;
   securitySettings: ISecuritySettings;
   serviceName: string;

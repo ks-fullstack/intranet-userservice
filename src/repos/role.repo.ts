@@ -12,7 +12,7 @@ class RoleRepo {
   public getAll(filter: string, selectedFields?: RoleFieldType) {
     const filterExp: IRoleFilter = filter ? JSON.parse(filter) : {};
     const selectFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
-    return roleModel.find({filterExp}).select(selectFieldsExp);
+    return roleModel.find(filterExp).select(selectFieldsExp);
   }
 
   public getCount(filter: string) {

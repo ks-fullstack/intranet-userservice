@@ -3,6 +3,7 @@
   "dbConnectionStr": "mongodb+srv://$username$:$password$@cluster0.nse481o.mongodb.net/$dbname$",
   "dbName": "intranet-prod",
   "disableLogs": false,
+  "otpExpiresInMin": 5,
   "cookieSettings": {
     "maxAge": 28800000,
     "httpOnly": true,

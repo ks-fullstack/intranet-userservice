@@ -1,3 +1,4 @@
+import { AddressType } from "../constants/app.enum";
 import { IBaseUser } from "./user.interface";
 
 export interface IAddress {
@@ -9,7 +10,7 @@ export interface IAddress {
   city: string;
   state: string;
   country: string;
-  addressType: string;
+  addressType: AddressType;
   isDefaultAddress: string;
   isActive: boolean;
   createdBy?: IBaseUser;

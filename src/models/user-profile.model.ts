@@ -5,17 +5,29 @@ import { IUserProfile } from "../interface/user-profile.interface";
 const userProfileSchema: Schema<IUserProfile> = new Schema(
   {
     userRef: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User", 
+      required: true
+    },
+    userId: {
+      lowercase: true,
+      maxlength: 20,
       required: true,
-      type: Object,
+      trim: true,
+      type: String,
+      unique: true,
     },
     firstname: {
+      maxlength: 30,
       required: true,
       type: String,
     },
     middlename: {
+      maxlength: 30,
       type: String,
     },
     lastname: {
+      maxlength: 30,
       required: true,
       type: String,
     },
@@ -29,10 +41,23 @@ const userProfileSchema: Schema<IUserProfile> = new Schema(
       type: Date,
     },
     emailId: {
+      lowercase: true,
+      maxlength: 100,
       required: true,
+      trim: true,
       type: String,
+      unique: true,
     },
     mobileNo: {
+      maxlength: 18,
+      required: true,
+      trim: true,
+      type: String,
+      unique: true,
+    },
+    role: {
+      maxlength: 30,
+      default: "user",
       type: String,
     },
     altenateNo: {
@@ -42,10 +67,6 @@ const userProfileSchema: Schema<IUserProfile> = new Schema(
       type: String,
     },
     backgroundPic: {
-      type: String,
-    },
-    role: {
-      default: "user",
       type: String,
     },
     isEmailVerified: {
@@ -73,10 +94,7 @@ const userProfileSchema: Schema<IUserProfile> = new Schema(
   }
 );
 
-userProfileSchema.index(
-  { userId: 1, emailId: 1, mobileNo: 1 },
-  { unique: true }
-);
+userProfileSchema.index({ userId: 1, emailId: 1, mobileNo: 1 }, { unique: true });
 
 const userProfile = mongoose.model<IUserProfile>("UserProfile", userProfileSchema);
 

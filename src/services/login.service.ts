@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { AppConstants } from "../constants/app.constant";
 import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
-import { IBaseUser, IUserFilter } from "../interface/user.interface";
+import { IBaseUser, ILogin, IUserFilter } from "../interface/user.interface";
 import userRepo from "../repos/user.repo";
 import userProfileRepo from "../repos/user-profile.repo";
 import APIConfig from "../utils/config";
@@ -28,7 +28,9 @@ class LoginService {
     const userResObj = await userRepo.create(req.body);
     if(userResObj) {
       //Create user profile
-      req.body.userRef = userRef;
+      userResObj.forEach(user => {
+        req.body.userRef = user._id;
+      });
       await userProfileRepo.create(req.body);
     }
     
@@ -43,7 +45,7 @@ class LoginService {
   public async signIn(req: Request, res: Response): Promise<IServiceResponse> {
     validationService.validatePostPayload(req);
 
-    const loginPayload: IUserFilter = { ...req.body };
+    const loginPayload: ILogin = { ...req.body };
     // Get user data
     let user = await userRepo.findUser({ userId: loginPayload.userId }, ["password", "loginAttempt", "isLocked", "isActive", "refreshToken"]);
     const userResObj = user?.toObject();
@@ -102,7 +104,6 @@ class LoginService {
 
     const logoutPayload: IUserFilter = { ...req.body };
     const res = await userRepo.update(logoutPayload, { token: "", refreshToken: "", updatedBy: req.user });
-    console.log("res", res);
     const result: IServiceResponse = {
       message: "Logout successful",
     };

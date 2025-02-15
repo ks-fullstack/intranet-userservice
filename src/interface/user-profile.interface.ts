@@ -1,8 +1,9 @@
+import mongoose, { Document } from "mongoose";
 import { Gender } from "../constants/app.enum";
 import { IBaseUser } from "./user.interface";
 
-export interface IUserProfile extends IBaseUser {
-  userRef: IBaseUser;
+export interface IUserProfile extends IBaseUser, Document {
+  userRef: mongoose.Types.ObjectId;
   firstname: string;
   middlename: string;
   lastname: string;
@@ -18,12 +19,21 @@ export interface IUserProfile extends IBaseUser {
   updatedBy?: IBaseUser;
 }
 
-export interface IUserProfileFilter extends IUserProfileUpdate {
+export interface IUserProfileFilter {
   _id?: string;
-  userRef?: IBaseUser;
+  userRef?: mongoose.Types.ObjectId;
+  userId?: string;
+  emailId?: string;
+  mobileNo?: string;
+  role?: string;
+  isActive?: boolean;
 }
 
 export interface IUserProfileUpdate {
+  userId?: string;
+  emailId?: string;
+  mobileNo?: string;
+  role?: string;
   firstname?: string;
   middlename?: string;
   lastname?: string;
@@ -39,3 +49,5 @@ export interface IUserProfileUpdate {
 }
 
 export type UserProfileFieldType = Array<keyof IUserProfile>;
+
+export type UserProfileUpdateFieldType = Array<keyof IUserProfileUpdate>;

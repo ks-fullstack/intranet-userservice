@@ -1,6 +1,7 @@
+import { Document } from "mongoose";
 import { IBaseUser } from "./user.interface";
 
-export interface IOTP {
+export interface IOTP extends Document {
   otpId: string;
   userId: string;
   otp?: string;

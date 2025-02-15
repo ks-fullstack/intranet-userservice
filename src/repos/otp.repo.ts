@@ -12,7 +12,7 @@ class OTPRepo {
   public getAll(filter: string, selectedFields?: OTPFieldType) {
     const filterExp: IOTPFilter = filter ? JSON.parse(filter) : {};
     const selectFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
-    return otp.find({ filterExp }).select(selectFieldsExp);
+    return otp.find(filterExp).select(selectFieldsExp);
   }
 
   public getCount(filter: string) {

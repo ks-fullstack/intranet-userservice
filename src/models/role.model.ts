@@ -4,12 +4,14 @@ import { IRole } from "../interface/role.interface";
 const roleSchema: Schema<IRole> = new Schema(
   {
     roleId: {
+      maxlength: 20,
       required: true,
       trim: true,
       type: String,
       unique: true,
     },
     role: {
+      maxlength: 30,
       required: true,
       trim: true,
       type: String,

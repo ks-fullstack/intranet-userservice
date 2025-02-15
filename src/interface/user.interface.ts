@@ -1,4 +1,5 @@
-export interface IUser extends IBaseUser {
+import { Document } from "mongoose";
+export interface IUser extends IBaseUser, Document {
   password: string | undefined;
   isActive: boolean | undefined;
   isLocked: boolean | undefined;
@@ -18,9 +19,11 @@ export interface IBaseUser {
   role: string;
 }
 
-export interface IUserFilter extends IUserUpdate {
+export interface IUserFilter {
   _id?: string;
   userId?: string;
+  emailId?: string;
+  mobileNo?: string;
   createdBy?: IBaseUser;
 }
 
@@ -43,4 +46,4 @@ export interface ILogin {
   password: string;
 }
 
-export type UserFieldType = Array<keyof IUser>;
+export type UserFieldType = Array<keyof IUser | '-_id'>;
