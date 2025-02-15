@@ -1,6 +1,7 @@
+import { Document } from "mongoose";
 import { IBaseUser } from "./user.interface";
 
-export interface IRole {
+export interface IRole extends Document {
   roleId: string;
   role: string;
   description: string;
@@ -9,9 +10,10 @@ export interface IRole {
   updatedBy?: IBaseUser;
 }
 
-export interface IRoleFilter extends IRoleUpdate {
+export interface IRoleFilter {
   _id?: string;
   roleId?: string;
+  role?: string;
   createdBy?: IBaseUser;
 }
 

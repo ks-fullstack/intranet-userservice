@@ -1,20 +1,25 @@
 import mongoose, { Schema } from "mongoose";
 import { IOTP } from "../interface/otp.interface";
+import APIConfig from "../utils/config";
 
 const otpSchema: Schema<IOTP> = new Schema(
   {
     otpId: {
+      maxlength: 20,
       type: String,
       required: true,
       trim: true,
       unique: true,
     },
     userId: {
+      lowercase: true,
+      maxlength: 20,
       type: String,
       required: true,
       trim: true,
     },
     otp: {
+      maxlength: 6,
       type: String,
       required: true,
     },
@@ -24,7 +29,7 @@ const otpSchema: Schema<IOTP> = new Schema(
     },
     expiryTime: {
       type: Date,
-      default: Date.now() + (5 * 60 * 1000), // 5 minutes
+      default: Date.now() + (APIConfig.config.otpExpiresInMin * 60 * 1000),
     },
     createdBy: {
       type: Object,

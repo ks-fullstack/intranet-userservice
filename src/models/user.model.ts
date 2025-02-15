@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
 import { IUser } from "../interface/user.interface";
+import updateUserChanges from "../services/change-stream.service";
 
 const hashRounds: number = parseInt(process.env.HASH_ROUNDS || '8');
 
@@ -8,30 +9,33 @@ const userSchema: Schema<IUser> = new Schema(
   {
     userId: {
       lowercase: true,
+      maxlength: 20,
       required: true,
       trim: true,
       type: String,
       unique: true,
     },
     password: {
-      minlength: 8,
       required: true,
       type: String,
     },
     emailId: {
       lowercase: true,
+      maxlength: 100,
       required: true,
       trim: true,
       type: String,
       unique: true,
     },
     mobileNo: {
+      maxlength: 18,
       required: true,
       trim: true,
       type: String,
       unique: true,
     },
     role: {
+      maxlength: 30,
       default: "user",
       type: String,
     },
@@ -52,6 +56,7 @@ const userSchema: Schema<IUser> = new Schema(
     },
     loginAttempt: {
       default: 0,
+      maxlength: 2,
       type: Number,
     },
     token: {
@@ -70,6 +75,11 @@ const userSchema: Schema<IUser> = new Schema(
   {
     strict: true,
     timestamps: true,
+    collectionOptions: {
+      changeStreamPreAndPostImages: {
+        enabled: true,
+      }
+    }
   }
 );
 
@@ -88,6 +98,28 @@ userSchema.pre("insertMany", async function (next, docs: IUser | IUser[]) {
   next();
 });
 
+//Watch user changes for update statement
 const user = mongoose.model<IUser>("User", userSchema);
+const pipeline = [
+  {
+    $match: {
+      $and: 
+      [
+        { operationType: "update" },
+        {
+          $or: [
+            { "updateDescription.updatedFields.userId": { $exists: true } },
+            { "updateDescription.updatedFields.emailId": { $exists: true } },
+            { "updateDescription.updatedFields.mobileNo": { $exists: true } },
+            { "updateDescription.updatedFields.role": { $exists: true } },
+          ]
+        }
+      ]
+    }
+  },
+];
+user.watch(pipeline).on('change', data => {
+  updateUserChanges(data);
+});
 
 export default user;

@@ -1,8 +1,9 @@
+import { Promise } from "mongoose";
 import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
 import userModel from "../models/user.model";
 
 class UserRepo {
-  private defaultSelectedFields: string = "_id userId emailId role isActive createdBy updatedBy ";
+  private defaultSelectedFields: string = "_id userId emailId mobileNo role isActive createdBy updatedBy ";
 
   public getOne(_id: string, selectedFields?: UserFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
@@ -32,12 +33,23 @@ class UserRepo {
     return userModel.deleteMany(filterExp);
   }
 
+  public save(inputData: IUser) {
+    const saveData = new userModel(inputData);
+    return new Promise((resolve: any, reject: any) => {
+      saveData.save().then((res) => {
+        resolve(res);
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
+
   public findOneAndUpdate(filterExp: IUserFilter, inputData: IUserUpdate) {
     return userModel.findOneAndUpdate(filterExp, inputData, {new: true});
   }
 
   public findUser(filterExp: IUserFilter, selectedFields?: UserFieldType) {
-    const selectedFieldsExp = "userId emailId role " + (selectedFields?.join(" ") || "");
+    const selectedFieldsExp = "userId emailId mobileNo role " + (selectedFields?.join(" ") || "");
     return userModel.findOne(filterExp).select(selectedFieldsExp);
   }
 }

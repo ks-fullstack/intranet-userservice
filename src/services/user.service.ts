@@ -1,6 +1,7 @@
 import { AppConstants } from "../constants/app.constant";
 import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
 import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
+import userProfileRepo from "../repos/user-profile.repo";
 import userRepo from "../repos/user.repo";
 import validationService from "./validation.service";
 
@@ -46,16 +47,29 @@ class UserService {
   public async create(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     validationService.validatePostPayload(req);
 
-    const inputData: IUser | IUser [] = req.body;
-    if (Array.isArray(inputData)) {
-      inputData.forEach((item) => {
+    if (Array.isArray(req.body)) {
+      req.body.forEach((item) => {
         item.createdBy = req.user;
       });
     } else {
-      inputData.createdBy = req.user;
+      req.body.createdBy = req.user;
     }
 
-    const resObj = await userRepo.create(inputData);
+    const resObj = await userRepo.create(req.body);
+    if(resObj) {
+      //Create user profile
+      resObj.forEach(user => {
+        if (Array.isArray(req.body)) {
+          const userIndex = req.body.findIndex(reqUser => reqUser.userId === user.userId);
+          if(userIndex !== -1) {
+            req.body[userIndex].userRef = user._id;
+          }
+        } else {
+          req.body.userRef = user._id;
+        }
+      });
+      await userProfileRepo.create(req.body);
+    }
     const result: IServiceResponse = {
       count: Array.isArray(resObj) ? resObj.length : 1,
       data: resObj,

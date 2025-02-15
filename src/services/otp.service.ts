@@ -111,7 +111,7 @@ class OTPService {
     }
 
     // Check if OTP already exists
-    if(req.originalUrl.includes("resend")) {
+    if (req.originalUrl.includes("resend")) {
       otpRes = await otpRepo.findUserOTP({ userId: data.userId, isVerfied: false, expiryTime: { $gt: new Date() } });
     }
     
