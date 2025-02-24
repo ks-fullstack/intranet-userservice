@@ -6,6 +6,7 @@ import APIConfig from "./config";
 import errorInterceptor from "./error.interceptor";
 import requestInterceptor from "./request.interceptor";
 import SecurityMiddleware from "./security";
+import { watchUserCollection } from "../services/change-stream.service";
 
 class ExpressApp {
   private static _instance: ExpressApp = new ExpressApp();
@@ -21,6 +22,7 @@ class ExpressApp {
 
   public async connectApp() {
     // Connect Database
+    MongoConnection.triggerCallbackFunOnMongoConnEvent("connected", watchUserCollection);
     await MongoConnection.connectDB();
 
     // Security middleware

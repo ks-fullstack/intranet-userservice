@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
 import { IUser } from "../interface/user.interface";
-import updateUserChanges from "../services/change-stream.service";
 
 const hashRounds: number = parseInt(process.env.HASH_ROUNDS || '8');
 
@@ -98,28 +97,6 @@ userSchema.pre("insertMany", async function (next, docs: IUser | IUser[]) {
   next();
 });
 
-//Watch user changes for update statement
 const user = mongoose.model<IUser>("User", userSchema);
-const pipeline = [
-  {
-    $match: {
-      $and: 
-      [
-        { operationType: "update" },
-        {
-          $or: [
-            { "updateDescription.updatedFields.userId": { $exists: true } },
-            { "updateDescription.updatedFields.emailId": { $exists: true } },
-            { "updateDescription.updatedFields.mobileNo": { $exists: true } },
-            { "updateDescription.updatedFields.role": { $exists: true } },
-          ]
-        }
-      ]
-    }
-  },
-];
-user.watch(pipeline).on('change', data => {
-  updateUserChanges(data);
-});
 
 export default user;

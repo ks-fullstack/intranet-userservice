@@ -2,6 +2,9 @@ import mongoose, { Connection } from "mongoose";
 import { IDBSettings } from "../interface/config.interface";
 import APIConfig from "../utils/config";
 
+type eventType = "connected" | "reconnected" | "disconnected"| "close" | "error";
+type callbackFun<A extends any[] = [], R = any>  = (...args: A) => R;
+
 class MongoConnection {
   private static _instance: MongoConnection = new MongoConnection();
   private static _connect: Connection;
@@ -21,19 +24,19 @@ class MongoConnection {
     MongoConnection._connect = mongoose.connection;
 
     MongoConnection._connect.on("connected", () => {
-      console.log("MongoDb Connection Established");
+      console.log("MongoDb Connection Established", new Date());
     });
 
     MongoConnection._connect.on("reconnected", () => {
-      console.log("MongoDB Connection Re-established");
+      console.log("MongoDB Connection Re-established", new Date());
     });
 
     MongoConnection._connect.on("disconnected", () => {
-      console.log("MongoDB Connection Disconnected");
+      console.log("MongoDB Connection Disconnected", new Date());
     });
 
     MongoConnection._connect.on("close", () => {
-      console.log("MongoDB Connection Closed");
+      console.log("MongoDB Connection Closed", new Date());
     });
 
     MongoConnection._connect.on("error", (error) => {
@@ -51,6 +54,12 @@ class MongoConnection {
 
   public async disconnectDB() {
     await MongoConnection._connect.close();
+  }
+
+  public triggerCallbackFunOnMongoConnEvent(event: eventType, callbackFun: callbackFun) {
+    MongoConnection._connect.on(event, () => {
+      return callbackFun();
+    });
   }
 }
 
