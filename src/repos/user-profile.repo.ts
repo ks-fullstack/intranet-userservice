@@ -2,7 +2,7 @@ import { IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldT
 import userProfile from "../models/user-profile.model";
 
 class UserProfileRepo {
-  private defaultSelectedFields: string = "_id userId firstname lastname gender dob profilePic emailId mobileNo role isActive createdBy updatedBy ";
+  private defaultSelectedFields: string = "_id userRef userId firstname lastname gender dob profilePic emailId mobileNo role isActive createdBy updatedBy ";
 
   public getOne(_id: string, selectedFields?: UserProfileFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");

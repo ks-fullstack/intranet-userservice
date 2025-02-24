@@ -37,10 +37,7 @@ const roleSchema: Schema<IRole> = new Schema(
   },
 );
 
-roleSchema.index(
-  { roleId: 1 },
-  { unique: true },
-);
+roleSchema.index({ roleId: 1, role: 1 }, { unique: true });
 
 const role = mongoose.model<IRole>("rolemaster", roleSchema);
 

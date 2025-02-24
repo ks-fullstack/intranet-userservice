@@ -2,7 +2,7 @@ import { IRole, IRoleFilter, IRoleUpdate, RoleFieldType } from "../interface/rol
 import roleModel from "../models/role.model";
 
 class RoleRepo {
-  private defaultSelectedFields: string = "_id roleId description isActive createdBy updatedBy ";
+  private defaultSelectedFields: string = "_id roleId role description isActive createdBy updatedBy ";
 
   public getOne(_id: string, selectedFields?: RoleFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
