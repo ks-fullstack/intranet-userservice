@@ -15,6 +15,7 @@ const roleSchema: Schema<IRole> = new Schema(
       required: true,
       trim: true,
       type: String,
+      unique: true,
     },
     description: {
       type: String,
