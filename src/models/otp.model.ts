@@ -4,13 +4,6 @@ import APIConfig from "../utils/config";
 
 const otpSchema: Schema<IOTP> = new Schema(
   {
-    otpId: {
-      maxlength: 20,
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-    },
     userId: {
       lowercase: true,
       maxlength: 20,
@@ -43,8 +36,6 @@ const otpSchema: Schema<IOTP> = new Schema(
     timestamps: true,
   }
 );
-
-otpSchema.index({ otpId: 1, userId: 1, isVerfied: 1 }, { unique: true });
 
 const otp = mongoose.model("otp", otpSchema);
 

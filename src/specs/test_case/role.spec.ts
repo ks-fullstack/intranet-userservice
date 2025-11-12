@@ -3,25 +3,28 @@ import { expect } from "chai";
 class RoleTestCase {
   private agent: any;
   private basePath: string;
+  private authToken: string = "";
 
   constructor(agent: any, basePath: string) {
     this.agent = agent;
     this.basePath = basePath;
   }
 
-  public executeTestCase() {
-    describe("Execute Role Testcase", () => {
-      it("should Get all role\"s list", async () => {
-        const res = await this.agent.get(this.basePath + "/get/list");
-        expect(res.statusCode).to.equal(200);
-        expect(res.body).to.have.own.property("success");
-      });
+  public setToken(token: string) {
+    this.authToken = token;
+  }
 
-      it("should Get count of all role\"s", async () => {
-        const res = await this.agent.get(this.basePath + "/get/count");
-        expect(res.statusCode).to.equal(200);
-        expect(res.body).to.have.own.property("success");
-      });
+  public executeTestCase() {
+    it("should Get all role's list", async () => {
+      const res = await this.agent.get(this.basePath + "/get/list").set("Authorization", `Bearer ${this.authToken}`);
+      expect(res.statusCode).to.equal(200);
+      expect(res.body).to.have.own.property("success");
+    });
+
+    it("should Get count of all role's", async () => {
+      const res = await this.agent.get(this.basePath + "/get/count").set("Authorization", `Bearer ${this.authToken}`);
+      expect(res.statusCode).to.equal(200);
+      expect(res.body).to.have.own.property("success");
     });
   }
 }

@@ -14,6 +14,7 @@ export interface IConfig {
   jwtSettings: IJWTSettings;
   securitySettings: ISecuritySettings;
   serviceName: string;
+  externalApisConfig?: Record<string, IExternalApiConfig>;
 }
 
 export interface IDBSettings extends ConnectOptions {
@@ -34,6 +35,24 @@ export interface ISecuritySettings {
 }
 
 export interface IJWTSettings {
-  expiresIn: string;
-  refreshTokenExpiresIn: string;
+  expiresInHours: string;
+  refreshTokenExpiresInHours: string;
+}
+
+export interface IExternalApiConfig {
+  baseUrl: string;
+  timeout: number; // in seconds 
+  apiKey?: string;
+  authHeaderName?: string;
+  defaultHeaders?: Record<string, string>;
+  retryCount?: number;
+  enabled?: boolean;
+  // Multiple authentication strategy
+  authConfig?: {
+    type: "bearer" | "basic" | "apiKey" | "custom" | "none";
+    username?: string;
+    password?: string;
+    headerName?: string;
+    tokenPrefix?: string;
+  };
 }

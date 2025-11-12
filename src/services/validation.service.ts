@@ -12,11 +12,11 @@ class ValidationService {
   public validatePostPayload(req: Request): void {
     if (Array.isArray(req.body)) {
       if (req.body.length === 0) {
-        throw new CustomError(AppConstants.EmptyPayloadMessage, 422);
+        throw new CustomError(422,AppConstants.EmptyPayloadMessage);
       }
     } else {
       if (!req.body || (req.body && Object.keys(req.body).length === 0)) {
-        throw new CustomError(AppConstants.EmptyPayloadMessage, 422);
+        throw new CustomError(422, AppConstants.EmptyPayloadMessage);
       }
     }
   }
@@ -24,20 +24,20 @@ class ValidationService {
   public validateFiterExpression(req: Request): void {
     const filterExp = req.body.filterExp || "";
     if (!filterExp || (filterExp && Object.keys(filterExp).length === 0)) {
-      throw new CustomError(AppConstants.FilterExpressionRequiredMessage, 422);
+      throw new CustomError(422, AppConstants.FilterExpressionRequiredMessage);
     }
   }
 
   public validateUpdateDataPayload(req: Request): void {
     const requestedDataToUpdate = req.body.data || "";
     if (!requestedDataToUpdate || (requestedDataToUpdate && Object.keys(requestedDataToUpdate).length === 0)) {
-      throw new CustomError(AppConstants.UpdatePayloadRequiredMessage, 422);
+      throw new CustomError(422, AppConstants.UpdatePayloadRequiredMessage);
     }
   }
 
   public validateQueryParam(req: Request, parameter: string): void {
     if (!req.params[parameter]) {
-      throw new CustomError(AppConstants.InvalidQueryParameterMessage, 422);
+      throw new CustomError(422, AppConstants.InvalidQueryParameterMessage);
     }
   }
 }

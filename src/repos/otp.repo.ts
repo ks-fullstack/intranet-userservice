@@ -25,7 +25,7 @@ class OTPRepo {
   }
 
   public update(filterExp: IOTPFilter, inputData: IOTPUpdate) {
-    return otp.updateMany(filterExp, inputData, { new: true });
+    return otp.updateMany(filterExp, inputData);
   }
 
   public findOneAndUpdate(filterExp: IOTPFilter, inputData: IOTPUpdate) {

@@ -81,7 +81,7 @@ class RoleService {
   public async delete(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     const filterExp: IRoleFilter = req.body.filterExp || "";
     if (!filterExp || (filterExp && Object.keys(filterExp).length === 0)) {
-      throw new CustomError("Filter expression required", 422);
+      throw new CustomError(422, "Filter expression required");
     } else {
       const resObj = await roleRepo.delete(filterExp);
       const result: IServiceResponse = {

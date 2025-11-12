@@ -25,7 +25,7 @@ class UserProfileRepo {
   }
 
   public update(filterExp: IUserProfileFilter, inputData: IUserProfileUpdate) {
-    return userProfile.updateMany(filterExp, inputData, {new: true});
+    return userProfile.updateMany(filterExp, inputData);
   }
 
   public findOneAndUpdate(filterExp: IUserProfileFilter, inputData: IUserProfileUpdate) {
