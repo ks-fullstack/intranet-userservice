@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
 import { IAuthenticatedRequest, IJWTVerifyToken } from "../interface/common.interface";
 import { getCookies } from "./common-util";
@@ -8,10 +8,7 @@ import { IBaseUser } from "../interface/user.interface";
 const jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
 
 const generateToken = (payload: Object | string, expiresIn: string): string => {
-  const options = {
-    expiresIn: expiresIn, // Token expiration time
-  };
-  const token: string = jwt.sign({ data: payload }, jwtSecretKey, options);
+  const token: string = jwt.sign({ data: payload }, jwtSecretKey, { expiresIn });
   return token;
 };
 
@@ -24,8 +21,21 @@ const validateRequest = (req: IAuthenticatedRequest, res: Response, next: NextFu
 
     jwt.verify(token, jwtSecretKey, (err, decodeData) => {
       if (err) {
-        // Invalid token
-        throw new CustomError("", 403);
+        if ((err as Error).name === "TokenExpiredError" && refreshToken) {
+          const refreshTokenData = validateToken(refreshToken);
+          if (refreshTokenData.isValid) {
+            const userData: any = refreshTokenData.data;
+            req.user = userData.data as IBaseUser;
+            next();
+            return;
+          } else {
+            // Invalid refresh token
+            throw new CustomError(498);
+          }
+        } else {
+          // Invalid access token
+          throw new CustomError(498, "Invalid access token");
+        }
       } else {
         const userData: any = decodeData;
         req.user = userData.data as IBaseUser;
@@ -34,7 +44,7 @@ const validateRequest = (req: IAuthenticatedRequest, res: Response, next: NextFu
     });
   } else {
     // Unauthorized request
-    throw new CustomError("", 401);
+    throw new CustomError(401);
   }
 };
 

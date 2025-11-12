@@ -20,8 +20,8 @@
     "replicaSet": "atlas-ua1jyo-shard-0"
   },
   "jwtSettings": {
-    "expiresIn": "1h",
-    "refreshTokenExpiresIn": "8h"
+    "expiresInHours": "1",
+    "refreshTokenExpiresInHours": "8"
   },
   "securitySettings": {
     "allowedOrigin": "http://localhost:5000",

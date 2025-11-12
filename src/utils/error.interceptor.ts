@@ -30,8 +30,14 @@ const getErrorMessage = (err: CustomError): string => {
     case 422:
       errMessage = "Invalid data provided";
       break;
-    default:
+    case 498:
+      errMessage = "Token expired, please login again";
+      break;
+    case 500:
       errMessage = "Internal server error";
+      break;
+    default:
+      errMessage = "Something went wrong";
       break;
   }
   return errMessage;

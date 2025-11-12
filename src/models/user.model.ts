@@ -58,11 +58,14 @@ const userSchema: Schema<IUser> = new Schema(
       maxlength: 2,
       type: Number,
     },
-    token: {
-      type: String,
-    },
     refreshToken: {
-      type: String,
+      tokenHash: {
+        type: String,
+      },
+      expiresAt: {
+        type: Date,
+        default: null
+      },
     },
     createdBy: {
       type: Object,
@@ -92,6 +95,9 @@ userSchema.pre("insertMany", async function (next, docs: IUser | IUser[]) {
   for (const doc of docs) {
     if (doc.password) {
       doc.password = await bcrypt.hash(doc.password, hashRounds);
+    }
+    if (doc.refreshToken && doc.refreshToken.tokenHash) {
+      doc.refreshToken.tokenHash = await bcrypt.hash(doc.refreshToken.tokenHash, hashRounds);
     }
   }
   next();

@@ -6,8 +6,10 @@ export interface IUser extends IBaseUser, Document {
   isVerifiedUser: boolean;
   lastLogin?: string;
   loginAttempt?: number;
-  token?: string;
-  refreshToken?: string;
+  refreshToken?: {
+    tokenHash: string;
+    expiresAt: Date | null;
+  };
   createdBy?: IBaseUser;
   updatedBy?: IBaseUser;
 }
@@ -25,6 +27,11 @@ export interface IUserFilter {
   emailId?: string;
   mobileNo?: string;
   createdBy?: IBaseUser;
+  refreshToken?: {
+    tokenHash?: string;
+    expiresAt?: Date | { $gt: Date } | { $lt: Date };
+  };
+  [key: string]: any; // to handle mongoose $or, $and and other operations
 }
 
 export interface IUserUpdate {
@@ -36,9 +43,12 @@ export interface IUserUpdate {
   lastLogin?: string;
   password?: string;
   loginAttempt?: number;
-  token?: string;
-  refreshToken?: string;
+  refreshToken?: {
+    tokenHash: string;
+    expiresAt: Date | null;
+  };
   updatedBy?: IBaseUser;
+  [key: string]: any; // to handle mongoose $set, $unset and other operations
 }
 
 export interface ILogin {

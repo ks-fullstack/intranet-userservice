@@ -103,11 +103,11 @@ class OTPService {
 
     const userRes = await userRepo.findUser({ userId: data.userId }, [ "isLocked", "isActive" ]);
     if (!userRes) {
-      throw new CustomError("User not found", 404);
+      throw new CustomError(404, "User not found");
     } else if (userRes.isLocked) {
-      throw new CustomError("User account is locked", 401);
+      throw new CustomError(401, "User account is locked");
     } else if (!userRes.isActive) {
-      throw new CustomError("User account is not active", 401);
+      throw new CustomError(401, "User account is not active");
     }
 
     // Check if OTP already exists

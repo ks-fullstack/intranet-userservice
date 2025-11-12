@@ -19,6 +19,15 @@ const getCookies = (req: Request) => {
   return cookies;
 }
 
+const clearCookies = (res: Response, cookieName: string) => {
+  let cookieSettings = { 
+    httpOnly: APIConfig.config.cookieSettings.httpOnly,
+    secure: APIConfig.config.cookieSettings.secure,
+    sameSite: APIConfig.config.cookieSettings.sameSite
+  };
+  res.clearCookie(cookieName, cookieSettings);
+}
+
 const setCookies = (res: Response, cookieName: string, cookieValue: string) => {
   res.cookie(cookieName, cookieValue, APIConfig.config.cookieSettings); // 8 hours
 }
@@ -36,4 +45,4 @@ const generateOTP = (length: number = 6, isAlfaNumeric: boolean = false): string
   return otp;
 }
 
-export { readJSONFile, getCookies, setCookies, generateOTP };
+export { readJSONFile, getCookies, setCookies, clearCookies, generateOTP };

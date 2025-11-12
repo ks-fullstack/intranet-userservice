@@ -20,8 +20,8 @@
     "replicaSet": "atlas-ua1jyo-shard-0"
   },
   "jwtSettings": {
-    "expiresIn": "1h",
-    "refreshTokenExpiresIn": "8h"
+    "expiresInHours": "1",
+    "refreshTokenExpiresInHours": "8"
   },
   "securitySettings": {
     "allowedOrigin": "http://localhost:5000; http://localhost:4200",
@@ -29,5 +29,17 @@
     "allowHeaders": "X-Requested-With, Content-Type",
     "allowCredentials": false
   },
-  "serviceName": "userservice"
+  "serviceName": "userservice",
+  "externalApisConfig": {
+    "sendEmailApi": {
+      "baseUrl": "http://localhost:5002/utilservice/api/email/internal/send",
+      "timeout": 30,
+      "enabled": true,
+      "authHeaderName": "Authorization",
+      "authConfig": {
+        "type": "bearer",
+        "tokenPrefix": "Bearer"
+      }
+    }
+  }
 }

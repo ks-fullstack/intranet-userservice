@@ -26,7 +26,7 @@ class UserRepo {
   }
 
   public update(filterExp: IUserFilter, inputData: IUserUpdate) {
-    return userModel.updateMany(filterExp, inputData, {new: true});
+    return userModel.updateMany(filterExp, inputData);
   }
 
   public delete(filterExp: IUserFilter) {

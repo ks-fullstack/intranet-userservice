@@ -15,6 +15,7 @@ export interface IRoleFilter {
   roleId?: string;
   role?: string;
   createdBy?: IBaseUser;
+  [key: string]: any; // to handle mongoose $or, $and and other operations
 }
 
 export interface IRoleUpdate {
@@ -22,6 +23,7 @@ export interface IRoleUpdate {
   role?: string;
   description?: string;
   updatedBy?: IBaseUser;
+  [key: string]: any; // to handle mongoose $set, $unset and other operations
 }
 
 export type RoleFieldType = Array<keyof IRole>;

@@ -25,7 +25,7 @@ class RoleRepo {
   }
 
   public update(filterExp: IRoleFilter, inputData: IRoleUpdate) {
-    return roleModel.updateMany(filterExp, inputData, {new: true});
+    return roleModel.updateMany(filterExp, inputData);
   }
 
   public findOneAndUpdate(filterExp: IRoleFilter, inputData: IRoleUpdate) {

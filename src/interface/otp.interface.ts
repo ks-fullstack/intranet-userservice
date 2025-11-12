@@ -2,9 +2,8 @@ import { Document } from "mongoose";
 import { IBaseUser } from "./user.interface";
 
 export interface IOTP extends Document {
-  otpId: string;
   userId: string;
-  otp?: string;
+  otp: string;
   isVerfied?: boolean;
   expiryTime?: Date;
   createdBy?: IBaseUser;
@@ -13,19 +12,20 @@ export interface IOTP extends Document {
 
 export interface IOTPFilter extends IOTPUpdate {
   _id?: string;
-  otpId?: string;
   userId?: string;
-  expiryTime?: Date | { $gt: Date }; 
+  expiryTime?: Date | { $gt: Date } | { $lt: Date }; 
   createdBy?: IBaseUser;
+  [key: string]: any; // to handle mongoose $or, $and and other operations
 }
 
 export interface IOTPUpdate {
   isVerfied?: boolean;
   updatedBy?: IBaseUser;
+  [key: string]: any; // to handle mongoose $set, $unset and other operations
 }
 
 export interface IVerifyOTP {
-  otpId: string;
+  _id?: string;
   otp: string;
 }
 

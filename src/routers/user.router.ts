@@ -15,12 +15,13 @@ class UserRoutes {
     this.router.delete("/delete", validateRequest, userController.delete);
 
     //Login Routes
-    this.router.post("/add", loginController.signUp);
-    this.router.post("/register",validateRequest, loginController.signUp);
+    this.router.post("/add", validateRequest, loginController.signUp);
+    this.router.post("/register", loginController.signUp);
     this.router.post("/login", loginController.signIn);
     this.router.post("/logout", validateRequest, loginController.signOut);
     this.router.post("/unlock", validateRequest, loginController.unlockUser);
     this.router.get("/refresh/token", loginController.refreshToken);
+    this.router.delete("/account/delete", validateRequest, loginController.deleteUser);
   }
 }
 

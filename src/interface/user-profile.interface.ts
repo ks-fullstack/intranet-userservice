@@ -27,6 +27,7 @@ export interface IUserProfileFilter {
   mobileNo?: string;
   role?: string;
   isActive?: boolean;
+  [key: string]: any; // to handle mongoose $or, $and and other operations
 }
 
 export interface IUserProfileUpdate {
@@ -46,6 +47,7 @@ export interface IUserProfileUpdate {
   isMobileNoVerified?: boolean;
   isActive?: boolean;
   updatedBy?: IBaseUser;
+  [key: string]: any; // to handle mongoose $set, $unset and other operations
 }
 
 export type UserProfileFieldType = Array<keyof IUserProfile>;
