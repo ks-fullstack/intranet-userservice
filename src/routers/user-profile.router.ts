@@ -1,6 +1,6 @@
 import { Router } from "express";
 import userProfileController from "../controllers/user-profile.controller";
-import { validateRequest } from "../utils/jwt-util";
+import { validateRequest } from "../middleware/auth.middleware";
 
 class UserRoutes {
   public readonly router: Router = Router();

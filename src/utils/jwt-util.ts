@@ -1,51 +1,11 @@
-import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
-import { IAuthenticatedRequest, IJWTVerifyToken } from "../interface/common.interface";
-import { getCookies } from "./common-util";
-import CustomError from "./custom.error";
-import { IBaseUser } from "../interface/user.interface";
+import { IJWTVerifyToken } from "../interface/common.interface";
 
 const jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
 
 const generateToken = (payload: Object | string, expiresIn: string): string => {
   const token: string = jwt.sign({ data: payload }, jwtSecretKey, { expiresIn });
   return token;
-};
-
-const validateRequest = (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
-  const accessToken = req.headers?.authorization || "";
-  const refreshToken = getCookies(req).refreshToken || "";
-
-  if (accessToken && refreshToken) {
-    const token = accessToken.split(" ")[1]; // Bearer <token>
-
-    jwt.verify(token, jwtSecretKey, (err, decodeData) => {
-      if (err) {
-        if ((err as Error).name === "TokenExpiredError" && refreshToken) {
-          const refreshTokenData = validateToken(refreshToken);
-          if (refreshTokenData.isValid) {
-            const userData: any = refreshTokenData.data;
-            req.user = userData.data as IBaseUser;
-            next();
-            return;
-          } else {
-            // Invalid refresh token
-            throw new CustomError(498);
-          }
-        } else {
-          // Invalid access token
-          throw new CustomError(498, "Invalid access token");
-        }
-      } else {
-        const userData: any = decodeData;
-        req.user = userData.data as IBaseUser;
-        next();
-      }
-    });
-  } else {
-    // Unauthorized request
-    throw new CustomError(401);
-  }
 };
 
 const validateToken = (token: string): IJWTVerifyToken => {
@@ -63,4 +23,4 @@ const validateToken = (token: string): IJWTVerifyToken => {
   }
 };
 
-export { generateToken, validateRequest, validateToken };
+export { generateToken, validateToken };

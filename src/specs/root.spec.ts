@@ -40,8 +40,8 @@ describe(`User Micro Service`, function() {
 
     it("should login into user service", async () => {
       const res = await agent.post(apiBasePath + "/user/login").send({
-        userId: "superadmin",
-        password: "Pratu@1405"
+        userId: process.env.TEST_USERNAME?.trim() || "",
+        password: process.env.TEST_PASSWORD?.trim() || ""
       });
       expect(res.statusCode).to.equal(200);
       expect(res.body).to.have.own.property("success");
@@ -63,7 +63,7 @@ describe(`User Micro Service`, function() {
     describe("Logout User and clear refresh token cookie", () => {
       it("should logout from user service", async () => {
         const res = await agent.post(apiBasePath + "/user/logout").set("Authorization", `Bearer ${authToken}`).send({
-          userId: "superadmin"
+          userId: process.env.TEST_USERNAME?.trim() || ""
         });
         expect(res.statusCode).to.equal(200);
         expect(res.body).to.have.own.property("success");
