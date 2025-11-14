@@ -1,6 +1,6 @@
 import { AppConstants } from "../constants/app.constant";
 import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
-import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
+import { IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
 import userProfileRepo from "../repos/user-profile.repo";
 import userRepo from "../repos/user.repo";
 import validationService from "./validation.service";

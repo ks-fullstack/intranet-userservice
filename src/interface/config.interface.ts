@@ -14,6 +14,7 @@ export interface IConfig {
   jwtSettings: IJWTSettings;
   securitySettings: ISecuritySettings;
   serviceName: string;
+  verificationLinkExpiresInHours: number;
   externalApisConfig?: Record<string, IExternalApiConfig>;
 }
 

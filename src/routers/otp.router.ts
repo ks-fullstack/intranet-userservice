@@ -13,9 +13,9 @@ class OTPRoutes {
     this.router.post("/create", validateRequest, authorizeRoles("admin", "superadmin"), otpController.create);
     this.router.put("/update", validateRequest, authorizeRoles("admin", "superadmin"), otpController.update);
     this.router.delete("/delete", validateRequest, authorizeRoles("admin", "superadmin"), otpController.delete);
-    this.router.post("/send", otpController.sendOTP);
-    this.router.post("/resend", otpController.sendOTP);
-    this.router.post("/verify", otpController.verifyOTP);
+    this.router.post("/send",  validateRequest, otpController.sendOTP);
+    this.router.post("/resend", validateRequest, otpController.sendOTP);
+    this.router.post("/verify", validateRequest, otpController.verifyOTP);
   }
 }
 

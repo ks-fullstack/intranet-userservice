@@ -6,13 +6,11 @@ import { IBaseUser, ILogin, IUserFilter } from "../interface/user.interface";
 import userRepo from "../repos/user.repo";
 import userProfileRepo from "../repos/user-profile.repo";
 import APIConfig from "../utils/config";
-import { generateOTP, getCookies, setCookies } from "../utils/common-util";
+import { getBaseURL, getCookies, setCookies } from "../utils/common-util";
 import CustomError from "../utils/custom.error";
-import { generateToken, validateToken } from "../utils/jwt-util";
+import { generateToken, randomToken, validateToken } from "../utils/jwt-util";
 import validationService from "./validation.service";
 import { callAPI } from "../utils/call-api-util";
-import otpRepo from "../repos/otp.repo";
-import { IOTP } from "../interface/otp.interface";
 
 class LoginService {
   public async signUp(req: IAuthenticatedRequest): Promise<IServiceResponse> {
@@ -42,7 +40,9 @@ class LoginService {
     }
 
     //Register user
-    const userResObj = await userRepo.create(req.body);
+    const userBody = req.body;
+    userBody.verificationToken = randomToken();
+    const userResObj = await userRepo.create(userBody);
     if (userResObj) {
       //Create user profile
       userResObj.forEach(user => {
@@ -50,36 +50,24 @@ class LoginService {
       });
       await userProfileRepo.create(req.body);
       
-      //Generate OTP for user verification
-      const payload = {
-        userId: userId,
-        otp: generateOTP(6),
-        createdBy: userRef
-      } as IOTP;
-
-      const otpRes = await otpRepo.create(payload);
-      if (!otpRes) {
-        resMsg = "User registered successfully. Failed to generate OTP for verification.";
-      } else { 
-        //Send user verification email
-        const emailResponse = await callAPI("sendEmailApi", "", {
-          method: "POST",
-          data: {
-            templateName: "user_verification",
-            receiverEmail: userResObj[0].emailId,
-            placeholderData: {
-              TO_NAME: userResObj[0].userId,
-              OTP: payload.otp,
-              OTP_VALID_TILL: APIConfig.config.otpExpiresInMin.toString()
-            }
+      //Send user verification email
+      const emailResponse = await callAPI("sendEmailApi", "", {
+        method: "POST",
+        data: {
+          templateName: "verify_account",
+          receiverEmail: userResObj[0].emailId,
+          placeholderData: {
+            TO_NAME: userResObj[0].userId,
+            VERIFICATION_URL: `${ getBaseURL() }/user/verify/account/${userBody.verificationToken}`,
+            LINK_VALID_TILL: APIConfig.config.verificationLinkExpiresInHours
           }
-        });
-
-        if (!emailResponse || emailResponse.status !== "success") {
-          resMsg = "User registered successfully. Failed to send verification email.";
-        } else {
-          resMsg = "User registered successfully. Verification email sent.";
         }
+      });
+
+      if (!emailResponse || !emailResponse.success) {
+        resMsg = "User registered successfully. Failed to send verification email.";
+      } else {
+        resMsg = "User registered successfully. Verification email sent.";
       }
     }
     
@@ -154,7 +142,7 @@ class LoginService {
     validationService.validatePostPayload(req);
 
     const logoutPayload: IUserFilter = { ...req.body };
-    const res = await userRepo.update(logoutPayload, { refreshToken: { tokenHash: "", expiresAt: null }, updatedBy: req.user });
+    await userRepo.update(logoutPayload, { refreshToken: { tokenHash: "", expiresAt: null }, updatedBy: req.user });
     const result: IServiceResponse = {
       message: "Logout successful",
     };
@@ -199,6 +187,30 @@ class LoginService {
       data: resObj,
       message: "User deleted successfully",
     };
+    return result;
+  }
+
+  public async verifyUser(req: IAuthenticatedRequest): Promise<IServiceResponse> {
+    const userRes = await userRepo.findUser({ verificationToken: req.params.token });
+    const userObj = userRes?.toObject();
+
+    // Verify token
+    if (!userObj) {
+      throw new CustomError(400, "Invalid verification link.");
+    }
+
+    // Check token expiry
+    if (userObj.verificationExpiresAt < new Date()) {
+      throw new CustomError(400, "Verification link expired. Please request a new one.");
+    }
+
+    // Update user verification status
+    const upadetUserObj = await userRepo.update({ userId: userObj?.userId }, { isVerifiedUser : true });
+    await userProfileRepo.update({ userId: userObj?.userId }, { isEmailVerified: true});
+    const result: IServiceResponse = {
+      message: "Account verified successfully!",
+      data: upadetUserObj
+    }
     return result;
   }
 }

@@ -25,8 +25,9 @@ export interface IOTPUpdate {
 }
 
 export interface IVerifyOTP {
-  _id?: string;
+  userId: string;
   otp: string;
+  isVerfied?: boolean;
 }
 
 export type OTPFieldType = Array<keyof IOTP>;

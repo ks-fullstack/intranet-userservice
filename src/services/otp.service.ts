@@ -52,11 +52,11 @@ class OTPService {
     // Generate OTP
     if (Array.isArray(inputData)) {
       inputData.forEach((item) => {
-        item.otp = generateOTP(6, true);
+        item.otp = generateOTP(6);
         item.createdBy = req.user;
       });
     } else {
-      inputData.otp = generateOTP(6, true);
+      inputData.otp = generateOTP(6);
       inputData.createdBy = req.user;
     }
 
@@ -116,7 +116,7 @@ class OTPService {
     }
     
     if (!otpRes) {
-      data.otp = generateOTP(6, true);
+      data.otp = generateOTP(6);
       data.createdBy = req.user;
       otpRes = await otpRepo.create(data);
     }
@@ -130,9 +130,28 @@ class OTPService {
   public async verifyOTP(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     validationService.validatePostPayload(req);
     const body: IVerifyOTP = req.body;
+
+    // Existing OTP check
+    const otpRes = await otpRepo.findUserOTP(body);
+    const existingOtp = otpRes?.toObject();
+    // Check if OTP exists
+    if (!existingOtp) {
+      throw new CustomError(400, 'Invalid OTP. Please try again.');
+    }
+
+    // Check if OTP is expired
+    if (existingOtp.expiryTime && existingOtp.expiryTime < new Date()) {
+      throw new CustomError(400, 'OTP has expired. Please request a new one.');
+    }
+
+    // Check if OTP is already verified
+    if (existingOtp.isVerfied) {
+      throw new CustomError(400, 'OTP has already been verified.');
+    }
+
     const resObj = await otpRepo.verifyOTP(body, { isVerfied: true, updatedBy: req.user });
     const result: IServiceResponse = {
-      message: resObj ? OTPConstants.OTPVerifiedMessage : OTPConstants.OTPVerificationFailedMessage,
+      message: OTPConstants.OTPVerifiedMessage,
     };
     return result;
   }

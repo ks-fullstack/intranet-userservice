@@ -18,10 +18,11 @@ class UserRoutes {
     //Login Routes
     this.router.post("/add", validateRequest, authorizeRoles("admin", "superadmin"), loginController.signUp);
     this.router.post("/unlock", validateRequest, authorizeRoles("admin", "superadmin"), loginController.unlockUser);
-    this.router.get("/refresh/token", authorizeRoles("admin", "superadmin"), loginController.refreshToken);
     this.router.delete("/account/delete", validateRequest, authorizeRoles("admin", "superadmin"), loginController.deleteUser);
     this.router.post("/register", loginController.signUp);
     this.router.post("/login", loginController.signIn);
+    this.router.get("/refresh/token", loginController.refreshToken);
+    this.router.get("/verify/account/:token", loginController.verifyUser);
     this.router.post("/logout", validateRequest, loginController.signOut);
   }
 }

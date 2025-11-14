@@ -7,6 +7,7 @@ const readJSONFile = (filePath: string) => {
   return JSON.parse(file);
 }
 
+//#region Cookies Method
 const getCookies = (req: Request) => {
   let cookies: any = {};
   let cookieList = req.headers.cookie?.split(';');
@@ -19,6 +20,10 @@ const getCookies = (req: Request) => {
   return cookies;
 }
 
+const setCookies = (res: Response, cookieName: string, cookieValue: string) => {
+  res.cookie(cookieName, cookieValue, APIConfig.config.cookieSettings); // 8 hours
+}
+
 const clearCookies = (res: Response, cookieName: string) => {
   let cookieSettings = { 
     httpOnly: APIConfig.config.cookieSettings.httpOnly,
@@ -27,10 +32,7 @@ const clearCookies = (res: Response, cookieName: string) => {
   };
   res.clearCookie(cookieName, cookieSettings);
 }
-
-const setCookies = (res: Response, cookieName: string, cookieValue: string) => {
-  res.cookie(cookieName, cookieValue, APIConfig.config.cookieSettings); // 8 hours
-}
+//#endregion
 
 const generateOTP = (length: number = 6, isAlfaNumeric: boolean = false): string => {
   let chars: string = '0123456789', otp: string = '';
@@ -45,4 +47,14 @@ const generateOTP = (length: number = 6, isAlfaNumeric: boolean = false): string
   return otp;
 }
 
-export { readJSONFile, getCookies, setCookies, clearCookies, generateOTP };
+const getBaseURL = (): string => {
+  let baseUrl: string = "";
+  if (process.env.DOMAIN?.includes('localhost')) {
+    baseUrl = `${process.env.PROTOCOL}://${process.env.DOMAIN}:${process.env.PORT}${APIConfig.config.apiBasePath}`;
+  } else {
+    baseUrl = `${process.env.PROTOCOL}://${process.env.DOMAIN}${APIConfig.config.apiBasePath}`;
+  }
+  return baseUrl;
+}
+
+export { readJSONFile, getCookies, setCookies, clearCookies, generateOTP, getBaseURL };

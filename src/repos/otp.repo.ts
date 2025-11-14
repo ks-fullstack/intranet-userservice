@@ -2,7 +2,7 @@ import otp from "../models/otp.model";
 import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../interface/otp.interface";
 
 class OTPRepo {
-  private defaultSelectedFields: string = "-_id userId otpId otp isVerified expiryTime ";
+  private defaultSelectedFields: string = "-_id userId otp isVerified expiryTime ";
 
   public getOne(_id: string, selectedFields?: OTPFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { IJWTVerifyToken } from "../interface/common.interface";
 
 const jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
@@ -23,4 +24,8 @@ const validateToken = (token: string): IJWTVerifyToken => {
   }
 };
 
-export { generateToken, validateToken };
+const randomToken = (tokenSize: number = 32): string => {
+  return crypto.randomBytes(tokenSize).toString("hex");
+};
+
+export { generateToken, validateToken, randomToken };
