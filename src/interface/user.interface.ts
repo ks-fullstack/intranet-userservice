@@ -10,6 +10,8 @@ export interface IUser extends IBaseUser, Document {
     tokenHash: string;
     expiresAt: Date | null;
   };
+  verificationToken: string;
+  verificationExpiresAt: Date;
   createdBy?: IBaseUser;
   updatedBy?: IBaseUser;
 }
@@ -31,6 +33,7 @@ export interface IUserFilter {
     tokenHash?: string;
     expiresAt?: Date | { $gt: Date } | { $lt: Date };
   };
+  verificationToken?: string;
   [key: string]: any; // to handle mongoose $or, $and and other operations
 }
 
@@ -38,6 +41,7 @@ export interface IUserUpdate {
   emailId?: string;
   mobileNo?: string;
   role?: string;
+  isVerifiedUser?: boolean;
   isActive?: boolean;
   isLocked?: boolean;
   lastLogin?: string;

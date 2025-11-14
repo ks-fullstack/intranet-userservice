@@ -4,6 +4,7 @@
   "dbName": "intranet",
   "disableLogs": false,
   "otpExpiresInMin": 5,
+  "verificationLinkExpiresInHours": 24,
   "cookieSettings": {
     "maxAge": 28800000,
     "httpOnly": true,
@@ -34,12 +35,7 @@
     "sendEmailApi": {
       "baseUrl": "http://localhost:5002/utilservice/api/email/internal/send",
       "timeout": 30,
-      "enabled": true,
-      "authHeaderName": "Authorization",
-      "authConfig": {
-        "type": "bearer",
-        "tokenPrefix": "Bearer"
-      }
+      "enabled": true
     }
   }
 }

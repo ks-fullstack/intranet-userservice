@@ -4,6 +4,7 @@
   "dbName": "intranet-prod",
   "disableLogs": false,
   "otpExpiresInMin": 5,
+  "verificationLinkExpiresInHours": 24,
   "cookieSettings": {
     "maxAge": 28800000,
     "httpOnly": true,

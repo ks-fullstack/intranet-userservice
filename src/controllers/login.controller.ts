@@ -76,6 +76,18 @@ class LoginController {
       next(err);
     }
   }
+
+  public verifyUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      loginService.verifyUser(req).then((result) => {
+        return res.redirect(`${process.env.FRONTEND_URL}?status=success`);
+      }).catch((err) => {
+        res.redirect(`${process.env.FRONTEND_URL}/verified?status=failed`);
+      });
+    } catch (err) {
+      res.redirect(`${process.env.FRONTEND_URL}/verified?status=error`);
+    }
+  }
 }
 
 export default new LoginController();

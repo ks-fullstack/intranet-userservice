@@ -4,7 +4,7 @@ import auditRepo from "./audit.repo";
 
 class AuditService {
   public create(req: Request, serviceName: string, disabelLogs: boolean = false) {
-    if (process.env.TESTENV === "0" || !disabelLogs) {
+    if (process.env.TEST_ENV === "0" || !disabelLogs) {
       const inputData: IAudit = {
         reqPayload : req.body,
         reqType : req.method,

@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-dotenv.config({ path: "env/dev.env" });
+dotenv.config({ path: "env/test.env" });
 
 import http, { Server } from "http";
 import { agent as request } from "supertest";

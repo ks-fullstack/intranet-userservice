@@ -3,8 +3,9 @@
 This project is a Node.js based intranet user service that provides functionalities for user management, role management, and authentication. It utilizes Express.js for the server framework, MongoDB for the database, and includes automated tests using Mocha and Chai.
 
 ## Features
-- User registration and authentication
+- User registration, verification and authentication
 - Role-based access control
+- One-time password (OTP) generation, sending and verification (send/verify endpoints)
 - RESTful API endpoints
 - Automated testing with Mocha and Chai
 
@@ -46,7 +47,13 @@ Application configuration files are located in the `config/` directory:
 Each configuration file contains environment-specific settings that control application behavior, API endpoints, database connections, and other critical parameters. The appropriate configuration is loaded based on the `NODE_ENV` variable.
 
 ## Testing
-To run the tests, use the command `npm test`. This will execute all test cases defined in the `specs` directory.
+To run the tests, use the command `npm run test`. This will execute all test cases defined in the `specs` directory.
+
+### Testing & OTP service info
+
+When running tests you may use the `env/test.env` file. The test runner sets `TEST_ENV` to indicate a test execution. While running tests the suite will print a short informational line about the OTP service when `TEST_ENV` is set.
+
+- `TEST_ENV`: Set to `1` in `env/test.env` to disable audit log.
 
 ## Coverage Info
 
