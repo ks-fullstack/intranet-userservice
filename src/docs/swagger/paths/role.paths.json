@@ -1,0 +1,45 @@
+{
+  "/role/get/list": {
+    "get": {
+      "tags": ["Role"],
+      "summary": "Get all roles",
+      "security": [{ "BearerAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "List of roles",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  { "$ref": "#/components/responses/SuccessResponse" },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/RoleView" }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "/role/get/count": {
+    "get": {
+      "tags": ["Role"],
+      "summary": "Get role count",
+      "security": [{ "BearerAuth": [] }],
+      "responses": {
+        "200": {
+          "$ref": "#/components/responses/CountResponse" 
+        }
+      }
+    }
+  }
+}

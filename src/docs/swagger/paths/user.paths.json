@@ -1,0 +1,90 @@
+{
+  "/user/login": {
+    "post": {
+      "tags": ["User"],
+      "summary": "User login",
+      "requestBody": {
+        "$ref": "#/components/requestBodies/LoginRequest"
+      },
+      "responses": {
+        "200": {
+          "description": "Login successful",
+          "content": {
+            "application/json": {
+              "schema": { 
+                "allOf": [
+                  { "$ref": "#/components/responses/SuccessResponse" },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "user": { "$ref": "#/components/schemas/UserView" }
+                        }
+                      },
+                      "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "/user/get/list": {
+    "get": {
+      "tags": ["User"],
+      "summary": "Get all users",
+      "security": [{ "BearerAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "List of users",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  { "$ref": "#/components/responses/SuccessResponse" },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/UserView" }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "401": { "$ref": "#/components/response/UnauthorizedErrorResponse" }
+      }
+    }
+  },
+
+  "/user/get/{userId}": {
+    "get": {
+      "tags": ["User"],
+      "summary": "Get user by ID",
+      "security": [{ "BearerAuth": [] }],
+      "parameters": [
+        { "$ref": "#/components/parameters/UserIdPathParam" }
+      ],
+      "responses": {
+        "200": {
+          "description": "User details",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserView" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
