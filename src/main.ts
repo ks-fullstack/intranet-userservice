@@ -7,6 +7,7 @@ ExpressApp.connectApp();
 
 ExpressApp.app.listen(port, () => {
   console.log(`Server is running on PORT ${port}`);
+  console.log(`URL: ${process.env.PROTOCOL}://${process.env.DOMAIN}:${port}`);
 });
 
 process.on('uncaughtException', (err) => {

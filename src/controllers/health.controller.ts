@@ -15,7 +15,7 @@ class HealthController {
     try {
       const result: IServiceResponse = {
         data: healthcheck,
-        message: "Intranet-PostService up and running",
+        message: `Intranet-${serviceName} up and running`,
       };
       responseHandler(res, result);
     } catch (err) {

@@ -12,7 +12,7 @@ const validateRequest = (req: IAuthenticatedRequest, res: Response, next: NextFu
   const accessToken = req.headers?.authorization || "";
   const refreshToken = getCookies(req).refreshToken || "";
 
-  if (accessToken && refreshToken) {
+  if (accessToken) {
     const token = accessToken.split(" ")[1]; // Bearer <token>
 
     jwt.verify(token, jwtSecretKey, (err, decodeData) => {
