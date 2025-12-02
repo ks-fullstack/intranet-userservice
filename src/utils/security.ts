@@ -23,8 +23,15 @@ class SecurityMiddleware {
     // Request Headers
     app.use((req: Request, res: Response, next: NextFunction) => {
       // Website you wish to allow to connect
-      res.setHeader("Access-Control-Allow-Origin",
-        config.securitySettings.allowedOrigin);
+      const allowedOrigins = config.securitySettings.allowedOrigin;
+      const origin = req.headers.origin;
+
+      // 1️⃣ Allow Swagger UI (origin: null or undefined)
+      if (origin === undefined || origin === "null") {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+      } else {
+        res.setHeader("Access-Control-Allow-Origin", allowedOrigins);
+      }
 
       // Request methods you wish to allow
       res.setHeader("Access-Control-Allow-Methods",

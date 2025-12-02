@@ -1,0 +1,22 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Intranet User Service API",
+    "version": "1.0.0",
+    "description": "API documentation for the Intranet User Service microservice."
+  },
+  "servers": [
+    { "url": "/userservice/api" }
+  ],
+  "paths": {},
+  "components": {},
+  "security": [
+    { "BearerAuth": [] }
+  ],
+  "tags": [
+    { "name": "User", "description": "User CRUD APIs" },
+    { "name": "Role", "description": "Role & Permission APIs" },
+    { "name": "User-Profile", "description": "User Profile CRUD APIs" },
+    { "name": "OTP", "description": "OTP verification & CRUD APIs" }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "SuccessResponse": {
+    "description": "Standard success response format",
+    "type": "object",
+    "properties": {
+      "statusCode": {
+        "type": "integer",
+        "example": 200
+      },
+      "success": {
+        "type": "boolean",
+        "example": true
+      },
+      "count": {
+        "type": "integer",
+        "nullable": true,
+        "description": "Number of items in the data array, returned for list endpoints only",
+        "example": 1
+      },
+      "message": {
+        "type": "string",
+        "description": "A message describing the result of the request",
+        "example": "Request processed successfully"
+      }
+    }
+  },
+
+  "CountResponse": {
+    "description": "Standard count response format",
+    "type": "object",
+    "properties": {
+      "statusCode": {
+        "type": "integer",
+        "example": 200
+      },
+      "success": {
+        "type": "boolean",
+        "example": true
+      },
+      "count": {
+        "type": "integer",
+        "description": "Number of items counted",
+        "example": 42
+      },
+      "data": {
+        "type": "integer",
+        "description": "Count of items",
+        "example": 42
+      },
+      "message": {
+        "type": "string",
+        "example": "42 records found"
+      }
+    }
+  },
+
+  "UnauthorizedErrorResponse": {
+    "description": "Standard error response format",
+    "type": "object",
+    "properties": {
+      "statusCode": {
+        "type": "integer",
+        "example": 401
+      },
+      "success": {
+        "type": "boolean",
+        "example": false
+      },
+      "message": {
+        "type": "string",
+        "example": "Unauthorized request"
+      }
+    }
+  },
+
+  "InvalidInputErrorResponse": {
+    "description": "Standard error response format for invalid inputs",
+    "type": "object",
+    "properties": {
+      "statusCode": {
+        "type": "integer",
+        "example": 422
+      },
+      "success": {
+        "type": "boolean",
+        "example": false
+      },
+      "message": {
+        "type": "string",
+        "example": "Invalid input data"
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "LoginRequest": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "required": ["userId", "password"],
+          "properties": {
+            "userId": {
+              "type": "string",
+              "example": "john.doe"
+            },
+            "password": {
+              "type": "string",
+              "example": "password123"
+            }
+          }
+        }
+      }
+    }
+  }
+}

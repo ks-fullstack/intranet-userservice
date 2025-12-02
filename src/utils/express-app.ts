@@ -7,6 +7,8 @@ import errorInterceptor from "./error.interceptor";
 import requestInterceptor from "./request.interceptor";
 import SecurityMiddleware from "./security";
 import { watchUserCollection } from "../services/change-stream.service";
+import swaggerUi from "swagger-ui-express";
+import swaggerDoc from "../docs/swagger";
 
 class ExpressApp {
   private static _instance: ExpressApp = new ExpressApp();
@@ -37,6 +39,9 @@ class ExpressApp {
     // Routing
     const routes = new Routes(APIConfig.config.apiBasePath);
     routes.initializeRouting(this.app);
+    
+    // Swagger UI
+    this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
     // Global error interceptor
     this.app.use(errorInterceptor);
