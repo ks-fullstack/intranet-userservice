@@ -12,9 +12,9 @@ class RoleService {
     const fieldSelection: RoleFieldType = typeof fields === 'string' ? fields.split(",") as RoleFieldType : [];
     const resObj = await roleRepo.getOne(recordId, fieldSelection);
     const result: IServiceResponse = {
-      count: 1,
+      count: resObj ? 1 : 0,
       data: resObj,
-      message: 1 + AppConstants.GetResponseMessage,
+      message: (resObj ? 1 : 0) + AppConstants.GetResponseMessage,
     };
     return result;
   }

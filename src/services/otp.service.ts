@@ -14,9 +14,9 @@ class OTPService {
     const fieldSelection: OTPFieldType = typeof fields === 'string' ? fields.split(",") as OTPFieldType : [];
     const resObj = await otpRepo.getOne(recordId, fieldSelection);
     const result: IServiceResponse = {
-      count: 1,
+      count: resObj ? 1 : 0,
       data: resObj,
-      message: 1 + AppConstants.GetResponseMessage,
+      message: (resObj ? 1 : 0) + AppConstants.GetResponseMessage,
     };
     return result;
   }
