@@ -14,7 +14,7 @@ This project is a Node.js based intranet user service that provides functionalit
 ## Setup
 1. Clone the repository.
 2. Install dependencies using `npm install`.
-3. Create a `.env` file based on the provided `.env.sample`.
+3. Create a `.env` file based on the provided `sample.env`.
 4. Run the application using `npm run dev`.
 
 ## Environment Variables
