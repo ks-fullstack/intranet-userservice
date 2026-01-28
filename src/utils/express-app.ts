@@ -3,9 +3,9 @@ import express, { Express } from "express";
 import MongoConnection from "../db/mongo-connection";
 import Routes from "../routers/router";
 import APIConfig from "./config";
-import errorInterceptor from "./error.interceptor";
-import requestInterceptor from "./request.interceptor";
-import SecurityMiddleware from "./security";
+import errorInterceptor from "../interceptors/error.interceptor"
+import requestInterceptor from "../interceptors/request.interceptor";
+import SecurityMiddleware from "../middleware/security.middleware";
 import { watchUserCollection } from "../services/change-stream.service";
 import swaggerUi from "swagger-ui-express";
 import swaggerDoc from "../docs/swagger";
