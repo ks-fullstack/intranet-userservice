@@ -97,7 +97,8 @@ This will launch the server and make the API endpoints available for use.
 ## API Documentation
 API documentation is available via Swagger UI. Once the application is running, you can access the documentation at:
 
-```http://<DOMAIN>:<PORT>/api-docs
+```
+http://<DOMAIN>:<PORT>/api-docs
 ```
 
 ## Project Structure
