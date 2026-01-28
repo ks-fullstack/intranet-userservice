@@ -1,4 +1,3 @@
-import { Promise } from "mongoose";
 import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
 import userModel from "../models/user.model";
 

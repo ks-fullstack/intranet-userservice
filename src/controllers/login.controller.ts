@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import responseInterceptor from "../utils/response.interceptor";
+import responseInterceptor from "../interceptors/response.interceptor";
 import loginService from "../services/login.service";
 import { clearCookies } from "../utils/common-util";
 

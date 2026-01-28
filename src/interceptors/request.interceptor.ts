@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import auditService from "../audit/audit.service";
-import APIConfig from "./config";
+import APIConfig from "../utils/config";
 
 export default (req: Request, res: Response, next: NextFunction) => {
   //Request Logger
