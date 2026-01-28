@@ -8,6 +8,8 @@ This project is a Node.js based intranet user service that provides functionalit
 - One-time password (OTP) generation, sending and verification (send/verify endpoints)
 - RESTful API endpoints
 - Automated testing with Mocha and Chai
+- Environment-specific configurations
+- Swagger API documentation
 
 ## Setup
 1. Clone the repository.
@@ -35,6 +37,9 @@ Create a `.env` file in the project root and populate it with the appropriate va
 - `JWT_SECRET_KEY`: Secret key for JWT token generation and validation
 - `DB_USERNAME`: Database username for MongoDB authentication
 - `DB_PASSWORD`: Database password for MongoDB authentication
+- `FRONTEND_URL`: URL of the frontend application
+- `TEST_USERNAME`: Username for test user
+- `TEST_PASSWORD`: Password for test user
 
 ## Configuration
 
@@ -80,3 +85,35 @@ npm run build
 ```
 
 This command compiles the TypeScript files into JavaScript, preparing the application for production deployment.
+
+## Running the Application
+To start the application, use the command:
+
+```bash
+npm start
+```
+This will launch the server and make the API endpoints available for use.
+
+## API Documentation
+API documentation is available via Swagger UI. Once the application is running, you can access the documentation at:
+
+```http://<DOMAIN>:<PORT>/api-docs
+```
+
+## Project Structure
+The project is organized into the following directories:
+- `config/`: Configuration files for different environments
+- `env/`: Environment variable files
+- `src/`: Source code directory
+  - `audit/`: Audit logging functionalities
+  - `constants/`: Application-wide constants
+  - `controllers/`: Request handlers for various endpoints
+  - `db/`: Database connection and models
+  - `docs/`: API documentation files
+  - `interceptors/`: Request and error interceptors
+  - `middleware/`: Custom middleware functions
+  - `models/`: Data models and schemas
+  - `routers/`: Route definitions
+  - `services/`: Business logic and services
+  - `specs/`: Test cases and test suites
+  - `utils/`: Utility functions and configurations
