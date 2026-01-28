@@ -41,7 +41,7 @@ class ExpressApp {
     routes.initializeRouting(this.app);
     
     // Swagger UI
-    this.app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+    this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
     // Global error interceptor
     this.app.use(errorInterceptor);
