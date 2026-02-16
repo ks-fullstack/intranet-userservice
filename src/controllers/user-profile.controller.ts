@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import responseInterceptor from "../interceptors/response.interceptor";
 import userProfileService from "../services/user-profile.service";
+import ResponseInterceptor from "../interceptors/response.interceptor";
 
 class UserProfileController {
   public getOne(req: Request, res: Response, next: NextFunction) {
     userProfileService
       .getOne(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -18,7 +18,7 @@ class UserProfileController {
     userProfileService
       .getAll(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -29,7 +29,7 @@ class UserProfileController {
     userProfileService
       .getCount(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -40,7 +40,7 @@ class UserProfileController {
     userProfileService
       .create(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -51,7 +51,7 @@ class UserProfileController {
     userProfileService
       .update(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -62,7 +62,7 @@ class UserProfileController {
     userProfileService
       .delete(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);

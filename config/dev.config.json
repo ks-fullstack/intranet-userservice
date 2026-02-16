@@ -28,7 +28,9 @@
     "allowedOrigin": "http://localhost:5000; http://localhost:4200",
     "allowedMethod": "GET, POST, PUT, PATCH, DELETE",
     "allowHeaders": "X-Requested-With, Content-Type, Authorization",
-    "allowCredentials": false
+    "allowCredentials": false,
+    "requestTimeoutInSeconds": 30,
+    "requestBodyMaxSizeInMB": 10
   },
   "serviceName": "userservice",
   "externalApisConfig": {

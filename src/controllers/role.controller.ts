@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import roleService from "../services/role.service";
-import responseInterceptor from "../interceptors/response.interceptor";
+import ResponseInterceptor from "../interceptors/response.interceptor";
 
 class RoleController {
   public getOne(req: Request, res: Response, next: NextFunction) {
     roleService
       .getOne(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -18,7 +18,7 @@ class RoleController {
     roleService
       .getAll(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -29,7 +29,7 @@ class RoleController {
     roleService
       .getCount(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -40,7 +40,7 @@ class RoleController {
     roleService
       .create(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -51,7 +51,7 @@ class RoleController {
     roleService
       .update(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -62,7 +62,7 @@ class RoleController {
     roleService
       .delete(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);

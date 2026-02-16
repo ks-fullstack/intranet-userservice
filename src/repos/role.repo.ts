@@ -6,7 +6,7 @@ class RoleRepo {
 
   public getOne(_id: string, selectedFields?: RoleFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
-    return roleModel.findOne({_id}).select(selectedFieldsExp);
+    return roleModel.findById(_id).select(selectedFieldsExp);
   }
 
   public getAll(filter: string, selectedFields?: RoleFieldType) {
@@ -17,7 +17,7 @@ class RoleRepo {
 
   public getCount(filter: string) {
     const filterExp: IRoleFilter = filter ? JSON.parse(filter) : {};
-    return roleModel.find(filterExp).estimatedDocumentCount();
+    return roleModel.countDocuments(filterExp);
   }
 
   public create(inputData: IRole | IRole[]) {

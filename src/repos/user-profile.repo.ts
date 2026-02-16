@@ -6,7 +6,7 @@ class UserProfileRepo {
 
   public getOne(_id: string, selectedFields?: UserProfileFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
-    return userProfile.findById({_id}).select(selectedFieldsExp);
+    return userProfile.findById(_id).select(selectedFieldsExp);
   }
 
   public getAll(filter: string, selectedFields?: UserProfileFieldType) {
@@ -17,7 +17,7 @@ class UserProfileRepo {
 
   public getCount(filter: string) {
     const filterExp: IUserProfileFilter = filter ? JSON.parse(filter) : {};
-    return userProfile.find(filterExp).estimatedDocumentCount();
+    return userProfile.countDocuments(filterExp);
   }
 
   public create(inputData: IUserProfile | IUserProfile[]) {

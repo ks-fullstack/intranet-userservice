@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import otpService from "../services/otp.service";
-import responseInterceptor from "../interceptors/response.interceptor";
+import ResponseInterceptor from "../interceptors/response.interceptor";
 
 class OTPController {
   public getOne(req: Request, res: Response, next: NextFunction) {
     otpService
       .getOne(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -18,7 +18,7 @@ class OTPController {
     otpService
       .getAll(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -29,7 +29,7 @@ class OTPController {
     otpService
       .getCount(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -40,7 +40,7 @@ class OTPController {
     otpService
       .create(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -51,7 +51,7 @@ class OTPController {
     otpService
       .update(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -62,7 +62,7 @@ class OTPController {
     otpService
       .delete(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -73,7 +73,7 @@ class OTPController {
     otpService
       .sendOTP(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -84,7 +84,7 @@ class OTPController {
     otpService
       .verifyOTP(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);

@@ -1,14 +1,15 @@
 import { Express, NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { IConfig } from "../interface/config.interface";
+import APIConfig from "../utils/config";
 
 class SecurityMiddleware {
-  constructor(app: Express, config: IConfig) {
-    /* ------------------------------------------------------------------
-    * Helmet – Secure Express apps by setting various HTTP headers
-    * ------------------------------------------------------------------ */
-    app.use(
+  /**
+   * Configure Helmet with recommended security settings
+   * @param app Express application instance
+   */
+  public static configureHelmet(app: Express): void {
+     app.use(
       helmet({
         hidePoweredBy: true,
         frameguard: { action: "deny" },
@@ -33,43 +34,81 @@ class SecurityMiddleware {
         crossOriginEmbedderPolicy: false // avoids breaking Swagger / file downloads
       })
     );
+  }
 
-    /* ------------------------------------------------------------------
-    * CORS – Centralized & Safe
-    * ------------------------------------------------------------------ */
-    app.use(
-      cors({
-        origin: (origin, callback) => {
-          const allowedOrigins = config.securitySettings.allowedOrigin;
-          if (!origin) return callback(null, true);
+  /**
+   * Additional security headers for all responses
+   * @param req
+   * @param res
+   * @param next
+   */
+  public static addSecurityHeaders(req: Request, res: Response, next: NextFunction): void {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-XSS-Protection", "1; mode=block");
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    res.setHeader("Referrer-Policy", "no-referrer");
+    res.setHeader("X-Permitted-Cross-Domain-Policies", "none");
+    res.setHeader("X-DNS-Prefetch-Control", "off");
+    next();
+  }
 
-          if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-          }
+  /**
+   * Get CORS options for dynamic origin handling
+   * @returns CORS options object
+   */
+  public static getCorsOptions(): cors.CorsOptions {
+    return {
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        const allowedOrigins = APIConfig.config.securitySettings.allowedOrigin;
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      methods: APIConfig.config.securitySettings.allowedMethod,
+      allowedHeaders: APIConfig.config.securitySettings.allowHeaders,
+      credentials: APIConfig.config.securitySettings.allowCredentials,
+      maxAge: 600 // Cache preflight response (10 mins)
+    };
+  }
 
-          return callback(new Error("CORS policy violation"));
-        },
-        methods: config.securitySettings.allowedMethod,
-        allowedHeaders: config.securitySettings.allowHeaders,
-        credentials: config.securitySettings.allowCredentials,
-        maxAge: 600 // Cache preflight response (10 mins)
-      })
-    );
+  /**
+   * Validate Content-Type for POST, PUT, PATCH requests
+   * @param req 
+   * @param res 
+   * @param next
+   */
+  public static validateContentType(req: Request, res: Response, next: NextFunction): void {
+    if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
+      const contentType = req.headers["content-type"] || "";
+      if (!contentType.includes("application/json") && !contentType.includes("multipart/form-data")) {
+        res.status(415).json({ message: "Unsupported Media Type: Content-Type must be application/json or multipart/form-data" });
+        return;
+      }
+    }
+    next();
+  }
 
-    /* ------------------------------------------------------------------
-     * Preflight OPTIONS handler
-     * ------------------------------------------------------------------ */
-    app.options("*", cors());
-
-    /* ------------------------------------------------------------------
-     * Additional Hardening Headers
-     * ------------------------------------------------------------------ */
-    app.use((req: Request, res: Response, next: NextFunction) => {
-      res.setHeader("X-Content-Type-Options", "nosniff");
-      res.setHeader("X-Permitted-Cross-Domain-Policies", "none");
-      res.setHeader("X-DNS-Prefetch-Control", "off");
-      next();
-    });
+  /**
+   * Sanitize query parameters to prevent XSS attacks
+   * @param req
+   * @param res
+   * @param next
+   */
+  public static sanitizeRequest(req: Request, res: Response, next: NextFunction): void {
+    if (req.query) {
+      for (const key in req.query) {
+        if (typeof req.query[key] === "string") {
+          req.query[key] = (req.query[key] as string)
+            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
+            .replace(/javascript:/gi, "") // Remove javascript: from URLs
+            .replace(/on\w+=["']?[^"'>]+["']?/gi, ""); // Remove event handlers like onClick
+        }
+      }
+    }
+    next();
   }
 }
 

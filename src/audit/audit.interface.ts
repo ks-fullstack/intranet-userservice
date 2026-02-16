@@ -10,5 +10,6 @@ export default interface IAudit {
     reqUrl: string;
     reqType: string;
     reqPayload?: object;
+    message?: string;
     createdBy?: IUser;
 }

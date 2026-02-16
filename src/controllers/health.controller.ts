@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IServiceResponse } from "../interface/common.interface";
 import APIConfig from "../utils/config";
-import responseHandler from "../interceptors/response.interceptor";
+import ResponseInterceptor from "../interceptors/response.interceptor";
 
 const serviceName = APIConfig.config.serviceName;
 
@@ -17,7 +17,7 @@ class HealthController {
         data: healthcheck,
         message: `Intranet-${serviceName} up and running`,
       };
-      responseHandler(res, result);
+      ResponseInterceptor.handleResponse(res, result);
     } catch (err) {
       next(err);
     }

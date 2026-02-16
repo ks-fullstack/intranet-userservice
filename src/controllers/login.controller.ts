@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import responseInterceptor from "../interceptors/response.interceptor";
 import loginService from "../services/login.service";
 import { clearCookies } from "../utils/common-util";
+import ResponseInterceptor from "../interceptors/response.interceptor";
 
 class LoginController {
   public signUp(req: Request, res: Response, next: NextFunction) {
     loginService
       .signUp(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -19,7 +19,7 @@ class LoginController {
     loginService
       .signIn(req, res)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -31,7 +31,7 @@ class LoginController {
       .signOut(req)
       .then((result) => {
         clearCookies(res, "refreshToken");
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -42,7 +42,7 @@ class LoginController {
     loginService
       .unlockUser(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -53,7 +53,7 @@ class LoginController {
     loginService
       .refreshToken(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -64,7 +64,7 @@ class LoginController {
     loginService
       .deleteUser(req)
       .then((result) => {
-        responseInterceptor(res, result);
+        ResponseInterceptor.handleResponse(res, result);
       })
       .catch((err) => {
         next(err);
@@ -75,7 +75,7 @@ class LoginController {
     loginService
       .verifyUser(req)
       .then((result) => {
-        return res.redirect(`${process.env.FRONTEND_URL}?status=success`);
+        res.redirect(`${process.env.FRONTEND_URL}?status=success`);
       })
       .catch((err) => {
         res.redirect(`${process.env.FRONTEND_URL}/verified?status=failed`);
