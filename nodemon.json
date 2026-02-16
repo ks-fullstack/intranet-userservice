@@ -1,0 +1,11 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["src/**/*.spec.ts"],
+  "exec": "node -r ts-node/register -r dotenv/config src/main.ts",
+  "env": {
+    "dotenv_config_path": "env/dev.env"
+  },
+  "delay": 1000,
+  "verbose": true
+}

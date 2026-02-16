@@ -17,6 +17,45 @@ This project is a Node.js based intranet user service that provides functionalit
 3. Create a `.env` file based on the provided `sample.env`.
 4. Run the application using `npm run dev`.
 
+## Running the Application
+
+### Development Mode
+To start the application in development mode with automatic reload on file changes:
+
+```bash
+npm run dev
+```
+
+This uses **nodemon** to watch for changes in the `src/` directory and automatically restarts the application. Perfect for active development.
+
+### Debug Mode
+To start the application in debug mode with Chrome DevTools integration:
+
+```bash
+npm run debug
+```
+
+This will:
+1. Start the application with Node.js Inspector enabled on port `9229`
+2. Pause execution at the first line of code
+3. Display the WebSocket URL in the terminal
+
+**Using Chrome DevTools Debugger:**
+1. Open Google Chrome
+2. Navigate to `chrome://inspect`
+3. Look for your Node.js process under "Remote Target"
+4. Click **inspect** to open the DevTools debugger
+5. Set breakpoints, step through code, and inspect variables
+
+### Production Mode
+To build and start the application for production:
+
+```bash
+npm start
+```
+
+This will compile TypeScript to JavaScript and launch the server.
+
 ## Environment Variables
 
 The application uses environment variables to configure runtime behavior. Environment files are located in the `env/` directory:
@@ -85,14 +124,6 @@ npm run build
 ```
 
 This command compiles the TypeScript files into JavaScript, preparing the application for production deployment.
-
-## Running the Application
-To start the application, use the command:
-
-```bash
-npm start
-```
-This will launch the server and make the API endpoints available for use.
 
 ## API Documentation
 API documentation is available via Swagger UI. Once the application is running, you can access the documentation at:
