@@ -33,6 +33,8 @@ export interface ISecuritySettings {
   allowHeaders: string;
   allowedMethod: string;
   allowedOrigin: string;
+  requestTimeoutInSeconds: number;
+  requestBodyMaxSizeInMB: number;
 }
 
 export interface IJWTSettings {

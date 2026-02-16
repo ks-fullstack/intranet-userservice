@@ -5,7 +5,7 @@ import http, { Server } from "http";
 import { agent as request } from "supertest";
 import MongoConnection from "../db/mongo-connection";
 import APIConfig from "../utils/config";
-import ExpressApp from "../utils/express-app";
+import ExpressApp from "../express-app";
 import RoleTestCase from "./test_case/role.spec";
 import UserTestCase from "./test_case/user.spec";
 import { expect } from "chai";

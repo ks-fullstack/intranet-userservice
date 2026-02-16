@@ -20,6 +20,9 @@ const auditSchema = new Schema(
       required: true,
       type: String,
     },
+    message: {
+      type: String,
+    },
   },
   {
     timestamps: true,

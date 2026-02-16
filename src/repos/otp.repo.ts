@@ -6,7 +6,7 @@ class OTPRepo {
 
   public getOne(_id: string, selectedFields?: OTPFieldType) {
     const selectedFieldsExp = this.defaultSelectedFields + (selectedFields?.join(" ") || "");
-    return otp.findOne({ _id }).select(selectedFieldsExp);
+    return otp.findById(_id).select(selectedFieldsExp);
   }
 
   public getAll(filter: string, selectedFields?: OTPFieldType) {
@@ -17,7 +17,7 @@ class OTPRepo {
 
   public getCount(filter: string) {
     const filterExp: IOTPFilter = filter ? JSON.parse(filter) : {};
-    return otp.find(filterExp).estimatedDocumentCount();
+    return otp.countDocuments(filterExp);
   }
 
   public create(inputData: IOTP | IOTP[]) {
