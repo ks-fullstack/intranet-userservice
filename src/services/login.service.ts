@@ -7,7 +7,7 @@ import userRepo from "../repos/user.repo";
 import userProfileRepo from "../repos/user-profile.repo";
 import APIConfig from "../utils/config";
 import { getBaseURL, getCookies, setCookies } from "../utils/common-util";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 import { generateToken, randomToken, validateToken } from "../utils/jwt-util";
 import validationService from "./validation.service";
 import { callAPI } from "../utils/call-api-util";

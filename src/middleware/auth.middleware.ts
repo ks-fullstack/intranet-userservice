@@ -4,7 +4,7 @@ import { IAuthenticatedRequest } from "../interface/common.interface";
 import { IBaseUser } from "../interface/user.interface";
 import { getCookies } from "../utils/common-util";
 import { validateToken } from "../utils/jwt-util";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 
 const jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
 

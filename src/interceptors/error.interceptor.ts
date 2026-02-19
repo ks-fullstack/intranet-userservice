@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 
 class ErrorInterceptor {
   public static handleError(

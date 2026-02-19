@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import auditService from "../audit/audit.service";
 import APIConfig from "../utils/config";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 
 class RequestInterceptor {
   public static logRequest(
