@@ -3,7 +3,7 @@ import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.int
 import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../interface/otp.interface";
 import otpRepo from "../repos/otp.repo";
 import userRepo from "../repos/user.repo";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 import { generateOTP } from "../utils/common-util";
 import validationService from "./validation.service";
 

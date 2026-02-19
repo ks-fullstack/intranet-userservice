@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { AppConstants } from "../constants/app.constant";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 
 class ValidationService {
   private static _instance: ValidationService = new ValidationService();

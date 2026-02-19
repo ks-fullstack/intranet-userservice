@@ -2,7 +2,7 @@ import { AppConstants } from "../constants/app.constant";
 import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
 import { IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldType } from "../interface/user-profile.interface";
 import userProfileRepo from "../repos/user-profile.repo";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 import validationService from "./validation.service";
 
 class UserProfileService {

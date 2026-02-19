@@ -2,7 +2,7 @@ import { AppConstants } from "../constants/app.constant";
 import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
 import { IRole, IRoleFilter, IRoleUpdate, RoleFieldType } from "../interface/role.interface";
 import roleRepo from "../repos/role.repo";
-import CustomError from "../utils/custom.error";
+import CustomError from "../utils/custom-error.util";
 import validationService from "./validation.service";
 
 class RoleService {
