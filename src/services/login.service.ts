@@ -11,6 +11,7 @@ import CustomError from "../utils/custom-error.util";
 import { generateToken, randomToken, validateToken } from "../utils/jwt-util";
 import validationService from "./validation.service";
 import { callAPI } from "../utils/call-api.util";
+import mongoose from "mongoose";
 
 class LoginService {
   public async signUp(req: IAuthenticatedRequest): Promise<IServiceResponse> {
@@ -41,7 +42,8 @@ class LoginService {
 
     //Register user
     const userBody = req.body;
-    userBody.verificationToken = randomToken();
+    const verificationToken = randomToken();
+    const verificationExpiresAt = new Date(Date.now() + APIConfig.config.verificationLinkExpiresInHours * 60 * 60 * 1000); 
     const userResObj = await userRepo.create(userBody);
     if (userResObj) {
       //Create user profile
@@ -58,7 +60,7 @@ class LoginService {
           receiverEmail: userResObj[0].emailId,
           placeholderData: {
             TO_NAME: userResObj[0].userId,
-            VERIFICATION_URL: `${ getBaseURL() }/user/verify/account/${userBody.verificationToken}`,
+            VERIFICATION_URL: `${ getBaseURL() }/user/verify/account/${verificationToken}`,
             LINK_VALID_TILL: APIConfig.config.verificationLinkExpiresInHours
           }
         }
@@ -67,13 +69,16 @@ class LoginService {
       if (!emailResponse || !emailResponse.success) {
         resMsg = `${emailResponse?.message || "Failed to send verification email"}. User registered successfully.`;
       } else {
-        resMsg = "User registered successfully. Verification email sent.";
+        resMsg = "User registered successfully. Verification email sent."; 
+        await userRepo.update({ userId: userResObj[0].userId }, { verificationToken: verificationToken, verificationExpiresAt: verificationExpiresAt });
       }
     }
-    
+
+    // Remove sensitive data before sending response
+    const sanitizedUserRes = this.sanitizeUserResponse(userResObj);
     const result: IServiceResponse = {
-      count: Array.isArray(userResObj) ? userResObj.length : 1,
-      data: userResObj,
+      count: sanitizedUserRes ? 1 : 0,
+      data: sanitizedUserRes,
       message: resMsg
     };
     return result;
@@ -200,7 +205,7 @@ class LoginService {
     }
 
     // Check token expiry
-    if (userObj.verificationExpiresAt < new Date()) {
+    if (userObj.verificationExpiresAt && userObj.verificationExpiresAt < new Date()) {
       throw new CustomError(400, "Verification link expired. Please request a new one.");
     }
 
@@ -212,6 +217,25 @@ class LoginService {
       data: upadetUserObj
     }
     return result;
+  }
+
+  private sanitizeUserResponse(userResObj: any): any {
+    const userResObjArray = Array.isArray(userResObj) ? userResObj : [userResObj];
+    const sanitizedUserResObjArray = userResObjArray.map(user => {
+      const sanitizedUser = user instanceof mongoose.Document ? user.toObject() : user;
+      delete sanitizedUser.password;
+      delete sanitizedUser.isLocked;
+      delete sanitizedUser.loginAttempt;
+      delete sanitizedUser.isActive;
+      delete sanitizedUser.refreshToken;
+      delete sanitizedUser.isVerifiedUser;
+      delete sanitizedUser.verificationToken;
+      delete sanitizedUser.verificationExpiresAt;
+      delete sanitizedUser._id;
+      delete sanitizedUser.__v;
+      return sanitizedUser;
+    });
+    return Array.isArray(userResObj) ? sanitizedUserResObjArray : sanitizedUserResObjArray[0];
   }
 }
 
