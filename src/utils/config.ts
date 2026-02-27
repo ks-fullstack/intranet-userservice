@@ -1,4 +1,4 @@
-import { readJSONFile } from "./common-util";
+import { readJSONFile } from "./common.util";
 import { IConfig } from "../interface/config.interface";
 
 export class APIConfig {

@@ -4,7 +4,7 @@ import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../inter
 import otpRepo from "../repos/otp.repo";
 import userRepo from "../repos/user.repo";
 import CustomError from "../utils/custom-error.util";
-import { generateOTP } from "../utils/common-util";
+import { generateOTP } from "../utils/common.util";
 import validationService from "./validation.service";
 
 class OTPService {

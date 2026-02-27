@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import loginService from "../services/login.service";
-import { clearCookies } from "../utils/common-util";
+import { clearCookies } from "../utils/common.util";
 import ResponseInterceptor from "../interceptors/response.interceptor";
 
 class LoginController {
