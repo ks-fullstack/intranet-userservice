@@ -43,7 +43,7 @@ const callAPI = async (apiName: string, endpoint: string, options: AxiosRequestC
     }
 
     if (!APIConfig.config.externalApisConfig?.[apiName]?.enabled) {
-      throw new Error(`API ${apiName} is disabled in configuration`);
+      return { message: `API ${apiName} is disabled` };
     }
 
     const headers = {

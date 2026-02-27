@@ -6,11 +6,11 @@ import { IBaseUser, ILogin, IUserFilter } from "../interface/user.interface";
 import userRepo from "../repos/user.repo";
 import userProfileRepo from "../repos/user-profile.repo";
 import APIConfig from "../utils/config";
-import { getBaseURL, getCookies, setCookies } from "../utils/common-util";
+import { getBaseURL, getCookies, setCookies } from "../utils/common.util";
 import CustomError from "../utils/custom-error.util";
 import { generateToken, randomToken, validateToken } from "../utils/jwt-util";
 import validationService from "./validation.service";
-import { callAPI } from "../utils/call-api-util";
+import { callAPI } from "../utils/call-api.util";
 
 class LoginService {
   public async signUp(req: IAuthenticatedRequest): Promise<IServiceResponse> {
@@ -65,7 +65,7 @@ class LoginService {
       });
 
       if (!emailResponse || !emailResponse.success) {
-        resMsg = "User registered successfully. Failed to send verification email.";
+        resMsg = `${emailResponse?.message || "Failed to send verification email"}. User registered successfully.`;
       } else {
         resMsg = "User registered successfully. Verification email sent.";
       }
