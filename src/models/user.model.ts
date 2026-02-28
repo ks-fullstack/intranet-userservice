@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
 import { IUser } from "../interface/user.interface";
-import APIConfig from "../utils/config";
 
 const hashRounds: number = parseInt(process.env.HASH_ROUNDS || '8');
 
@@ -48,11 +47,10 @@ const userSchema: Schema<IUser> = new Schema(
       type: Boolean,
     },
     verificationToken: {
-      type: String
+      type: String,
     },
     verificationExpiresAt: {
       type: Date,
-      default: Date.now() + (APIConfig.config.verificationLinkExpiresInHours * 60 * 60 * 1000)
     },
     isVerifiedUser: {
       default: false,

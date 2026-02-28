@@ -3,15 +3,15 @@ export interface IUser extends IBaseUser, Document {
   password: string | undefined;
   isActive: boolean | undefined;
   isLocked: boolean | undefined;
-  isVerifiedUser: boolean;
-  lastLogin?: string;
+  isVerifiedUser: boolean | undefined;
+  lastLogin?: Date;
   loginAttempt?: number;
   refreshToken?: {
     tokenHash: string;
-    expiresAt: Date | null;
+    expiresAt: Date | undefined;
   };
-  verificationToken: string;
-  verificationExpiresAt: Date;
+  verificationToken?: string;
+  verificationExpiresAt?: Date;
   createdBy?: IBaseUser;
   updatedBy?: IBaseUser;
 }
