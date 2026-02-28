@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import roleService from "../services/role.service";
-import ResponseInterceptor from "../interceptors/response.interceptor";
+import { ResponseInterceptor } from "../interceptors";
 
 class RoleController {
   public getOne(req: Request, res: Response, next: NextFunction) {

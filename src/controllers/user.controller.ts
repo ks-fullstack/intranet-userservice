@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import userService from "../services/user.service";
-import ResponseInterceptor from "../interceptors/response.interceptor";
+import { ResponseInterceptor } from "../interceptors";
 
 class UserController {
   public getOne(req: Request, res: Response, next: NextFunction) {

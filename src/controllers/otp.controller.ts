@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import otpService from "../services/otp.service";
-import ResponseInterceptor from "../interceptors/response.interceptor";
+import { ResponseInterceptor } from "../interceptors";
 
 class OTPController {
   public getOne(req: Request, res: Response, next: NextFunction) {
