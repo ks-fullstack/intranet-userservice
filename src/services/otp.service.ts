@@ -1,8 +1,7 @@
 import { AppConstants, OTPConstants} from "../constants/app.constant";
 import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
 import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../interface/otp.interface";
-import otpRepo from "../repos/otp.repo";
-import userRepo from "../repos/user.repo";
+import { otpRepo, userRepo } from "../repos";
 import CustomError from "../utils/custom-error.util";
 import { generateOTP } from "../utils/common.util";
 import validationService from "./validation.service";

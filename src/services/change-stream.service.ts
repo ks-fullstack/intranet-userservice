@@ -1,7 +1,7 @@
 import { ChangeStream, Document } from "mongodb";
 import { IUserProfileUpdate, UserProfileUpdateFieldType } from "../interface/user-profile.interface";
 import user from "../models/user.model";
-import userProfileRepo from "../repos/user-profile.repo";
+import { userProfileRepo } from "../repos";
 
 let userChangeStream: ChangeStream | null = null;
 
