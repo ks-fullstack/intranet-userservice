@@ -1,4 +1,4 @@
-import { AddressType } from "../constants/app.enum";
+import { AddressType } from "../constants";
 import { IBaseUser } from "./user.interface";
 
 export interface IAddress {

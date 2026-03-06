@@ -1,5 +1,5 @@
 import { Express } from "express";
-import { IRoutes } from "../interface/router.interface";
+import { IRoutes } from "../interface";
 import healthRouter from "./health.router";
 import otpRouter from "./otp.router";
 import roleRoutes from "./role.router";

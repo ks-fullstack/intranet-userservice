@@ -1,7 +1,6 @@
-import { AppConstants } from "../constants/app.constant";
-import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
-import { IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldType } from "../interface/user-profile.interface";
-import { userProfileRepo } from "../repos";
+import { AppConstants } from "../constants";
+import { IAuthenticatedRequest, IServiceResponse,  IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldType } from "../interface";
+import { UserProfileRepo } from "../repos";
 import CustomError from "../utils/custom-error.util";
 import validationService from "./validation.service";
 
@@ -10,7 +9,7 @@ class UserProfileService {
     const recordId = req.params.id;
     const { fields } = req.query;
     const fieldSelection: UserProfileFieldType = typeof fields === 'string' ? fields.split(",") as UserProfileFieldType : [];
-    const resObj = await userProfileRepo.getOne(recordId, fieldSelection);
+    const resObj = await UserProfileRepo.getOne(recordId, fieldSelection);
     const result: IServiceResponse = {
       count: resObj ? 1 : 0,
       data: resObj,
@@ -23,7 +22,7 @@ class UserProfileService {
     const { fields, filter } = req.query;
     const filterExp =  typeof filter === 'string' ? filter : "";
     const fieldSelection: UserProfileFieldType = typeof fields === 'string' ? fields.split(",") as UserProfileFieldType : [];
-    const resObj = await userProfileRepo.getAll(filterExp, fieldSelection);
+    const resObj = await UserProfileRepo.getAll(filterExp, fieldSelection);
     const result: IServiceResponse = {
       count: resObj.length,
       data: resObj,
@@ -35,7 +34,7 @@ class UserProfileService {
   public async getCount(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     const { filter } = req.query;
     const filterExp =  typeof filter === 'string' ? filter : "";
-    const resObj = await userProfileRepo.getCount(filterExp);
+    const resObj = await UserProfileRepo.getCount(filterExp);
     const result: IServiceResponse = {
       count: resObj,
       data: resObj,
@@ -55,7 +54,7 @@ class UserProfileService {
       inputData.createdBy = req.user;
     }
 
-    const resObj = await userProfileRepo.create(req.body);
+    const resObj = await UserProfileRepo.create(req.body);
     const result: IServiceResponse = {
       count: Array.isArray(resObj) ? resObj.length : 1,
       data: resObj,
@@ -71,7 +70,7 @@ class UserProfileService {
     const filterExp: IUserProfileFilter = req.body.filterExp || "";
     const requestedDataToUpdate: IUserProfileUpdate = req.body.data || "";
     requestedDataToUpdate.updatedBy = req.user;
-    const resObj = await userProfileRepo.update(filterExp, requestedDataToUpdate);
+    const resObj = await UserProfileRepo.update(filterExp, requestedDataToUpdate);
     const result: IServiceResponse = {
       count: resObj.modifiedCount,
       data: resObj,
@@ -85,7 +84,7 @@ class UserProfileService {
     if (!filterExp || (filterExp && Object.keys(filterExp).length === 0)) {
       throw new CustomError(422, "Filter expression required");
     } else {
-      const resObj = await userProfileRepo.delete(filterExp);
+      const resObj = await UserProfileRepo.delete(filterExp);
       const result: IServiceResponse = {
         count: resObj.deletedCount,
         message: resObj.deletedCount + AppConstants.DeleteResponeMessage,

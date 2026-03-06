@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IOTP } from "../interface/otp.interface";
+import { IOTP } from "../interface";
 import APIConfig from "../utils/config";
 
 const otpSchema: Schema<IOTP> = new Schema(

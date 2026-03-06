@@ -1,7 +1,7 @@
 import { ChangeStream, Document } from "mongodb";
-import { IUserProfileUpdate, UserProfileUpdateFieldType } from "../interface/user-profile.interface";
+import { IUserProfileUpdate, UserProfileUpdateFieldType } from "../interface";
 import user from "../models/user.model";
-import { userProfileRepo } from "../repos";
+import { UserProfileRepo } from "../repos";
 
 let userChangeStream: ChangeStream | null = null;
 
@@ -46,7 +46,7 @@ const watchUserCollection = () => {
     });
   
     // Update corresponding UserProfile
-    await userProfileRepo.findOneAndUpdate(
+    await UserProfileRepo.findOneAndUpdate(
       { userRef: userId },
       updatedUserData
     );

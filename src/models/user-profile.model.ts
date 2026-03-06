@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { Gender } from "../constants/app.enum";
-import { IUserProfile } from "../interface/user-profile.interface";
+import { Gender } from "../constants";
+import { IUserProfile } from "../interface";
 
 const userProfileSchema: Schema<IUserProfile> = new Schema(
   {

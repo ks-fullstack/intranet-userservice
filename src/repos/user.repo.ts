@@ -1,4 +1,4 @@
-import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
+import { IUser, IUserFilter, IUserUpdate, UserFieldType } from "../interface";
 import userModel from "../models/user.model";
 
 class UserRepo {

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IRole } from "../interface/role.interface";
+import { IRole } from "../interface";
 
 const roleSchema: Schema<IRole> = new Schema(
   {

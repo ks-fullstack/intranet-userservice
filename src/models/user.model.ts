@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
-import { IUser } from "../interface/user.interface";
+import { IUser } from "../interface";
 
 const hashRounds: number = parseInt(process.env.HASH_ROUNDS || '8');
 

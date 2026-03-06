@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { IAuthenticatedRequest } from "../interface/common.interface";
+import { IAuthenticatedRequest } from "../interface";
 import CustomError from "../utils/custom-error.util";
 
 const authorizeRoles = (...allowedRoles: string[]) => {

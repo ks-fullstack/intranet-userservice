@@ -1,16 +1,14 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { AppConstants } from "../constants/app.constant";
-import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
-import { IBaseUser, ILogin, IUserFilter } from "../interface/user.interface";
-import { userRepo, userProfileRepo } from "../repos";
+import { AppConstants } from "../constants";
+import {  IAuthenticatedRequest, IBaseUser, ILogin, IUserFilter, IServiceResponse } from "../interface";
+import { UserRepo, UserProfileRepo } from "../repos";
 import APIConfig from "../utils/config";
 import { getBaseURL, getCookies, setCookies } from "../utils/common.util";
 import CustomError from "../utils/custom-error.util";
 import { generateToken, randomToken, validateToken } from "../utils/jwt-util";
 import validationService from "./validation.service";
 import { callAPI } from "../utils/call-api.util";
-import mongoose from "mongoose";
 
 class LoginService {
   public async signUp(req: IAuthenticatedRequest): Promise<IServiceResponse> {
@@ -28,7 +26,7 @@ class LoginService {
 
     // Check if user already exists
     const { userId, emailId, mobileNo } = req.body;
-    const existingUser = await userRepo.findUser({ 
+    const existingUser = await UserRepo.findUser({ 
       $or: [
         { userId: userId },
         { emailId: emailId },
@@ -43,13 +41,13 @@ class LoginService {
     const userBody = req.body;
     const verificationToken = randomToken();
     const verificationExpiresAt = new Date(Date.now() + APIConfig.config.verificationLinkExpiresInHours * 60 * 60 * 1000); 
-    const userResObj = await userRepo.create(userBody);
+    const userResObj = await UserRepo.create(userBody);
     if (userResObj) {
       //Create user profile
       userResObj.forEach(user => {
         req.body.userRef = user._id;
       });
-      await userProfileRepo.create(req.body);
+      await UserProfileRepo.create(req.body);
       
       //Send user verification email
       const emailResponse = await callAPI("sendEmailApi", "", {
@@ -69,7 +67,7 @@ class LoginService {
         resMsg = `${emailResponse?.message || "Failed to send verification email"}. User registered successfully.`;
       } else {
         resMsg = "User registered successfully. Verification email sent."; 
-        await userRepo.update({ userId: userResObj[0].userId }, { verificationToken: verificationToken, verificationExpiresAt: verificationExpiresAt });
+        await UserRepo.update({ userId: userResObj[0].userId }, { verificationToken: verificationToken, verificationExpiresAt: verificationExpiresAt });
       }
     }
 
@@ -88,7 +86,7 @@ class LoginService {
 
     const loginPayload: ILogin = { ...req.body };
     // Get user data
-    let user = await userRepo.findUser({ userId: loginPayload.userId }, ["password", "loginAttempt", "isLocked", "isActive", "refreshToken"]);
+    let user = await UserRepo.findUser({ userId: loginPayload.userId }, ["password", "loginAttempt", "isLocked", "isActive", "refreshToken"]);
     const userResObj = user?.toObject();
 
     if (!userResObj) {
@@ -121,7 +119,7 @@ class LoginService {
       const refreshToken = generateToken(userResObj, APIConfig.config.jwtSettings.refreshTokenExpiresInHours + "h");
       const refreshTokenExpiresIn = new Date(now.getTime() + parseInt(APIConfig.config.jwtSettings.refreshTokenExpiresInHours) * 60 * 60 * 1000);
 
-      await userRepo.update({ userId: loginPayload.userId }, { refreshToken: { tokenHash: refreshToken, expiresAt: refreshTokenExpiresIn }, loginAttempt: 0 });
+      await UserRepo.update({ userId: loginPayload.userId }, { refreshToken: { tokenHash: refreshToken, expiresAt: refreshTokenExpiresIn }, loginAttempt: 0 });
       setCookies(res, "refreshToken", refreshToken);
       result = {
         data: userResObj,
@@ -131,10 +129,10 @@ class LoginService {
     } else {
       const loginAttempt = (userResObj.loginAttempt || 0) + 1;
       if (loginAttempt > 3) {
-        await userRepo.update({ userId: loginPayload.userId }, { loginAttempt: loginAttempt, isLocked: true });
+        await UserRepo.update({ userId: loginPayload.userId }, { loginAttempt: loginAttempt, isLocked: true });
         throw new CustomError(401, "Account locked");
       } else {
-        await userRepo.update({ userId: loginPayload.userId }, { loginAttempt: loginAttempt });
+        await UserRepo.update({ userId: loginPayload.userId }, { loginAttempt: loginAttempt });
         throw new CustomError(401, "Invalid password");
       }
     }
@@ -146,7 +144,7 @@ class LoginService {
     validationService.validatePostPayload(req);
 
     const logoutPayload: IUserFilter = { ...req.body };
-    await userRepo.update(logoutPayload, { refreshToken: { tokenHash: "", expiresAt: null }, updatedBy: req.user });
+    await UserRepo.update(logoutPayload, { refreshToken: { tokenHash: "", expiresAt: null }, updatedBy: req.user });
     const result: IServiceResponse = {
       message: "Logout successful",
     };
@@ -158,7 +156,7 @@ class LoginService {
     req.body.updatedBy = req.user;
 
     const unlockPayload: IUserFilter = { ...req.body };
-    await userRepo.update(unlockPayload, { isLocked: false, loginAttempt: 0, refreshToken: { tokenHash: "", expiresAt: null } });
+    await UserRepo.update(unlockPayload, { isLocked: false, loginAttempt: 0, refreshToken: { tokenHash: "", expiresAt: null } });
     const result: IServiceResponse = {
       message: "User unlocked successfully",
     };
@@ -184,8 +182,8 @@ class LoginService {
   public async deleteUser(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     validationService.validateFiterExpression(req);
     const filterExp: IUserFilter = req.body.filterExp || "";
-    const resObj = await userRepo.delete(filterExp);
-    const userProfileRes = await userProfileRepo.delete({ userId: filterExp.userId });
+    const resObj = await UserRepo.delete(filterExp);
+    const userProfileRes = await UserProfileRepo.delete({ userId: filterExp.userId });
     const result: IServiceResponse = {
       count: resObj.deletedCount,
       data: resObj,
@@ -195,7 +193,7 @@ class LoginService {
   }
 
   public async verifyUser(req: IAuthenticatedRequest): Promise<IServiceResponse> {
-    const userRes = await userRepo.findUser({ verificationToken: req.params.token });
+    const userRes = await UserRepo.findUser({ verificationToken: req.params.token });
     const userObj = userRes?.toObject();
 
     // Verify token
@@ -209,8 +207,8 @@ class LoginService {
     }
 
     // Update user verification status
-    const upadetUserObj = await userRepo.update({ userId: userObj?.userId }, { isVerifiedUser : true });
-    await userProfileRepo.update({ userId: userObj?.userId }, { isEmailVerified: true});
+    const upadetUserObj = await UserRepo.update({ userId: userObj?.userId }, { isVerifiedUser : true });
+    await UserProfileRepo.update({ userId: userObj?.userId }, { isEmailVerified: true});
     const result: IServiceResponse = {
       message: "Account verified successfully!",
       data: upadetUserObj
@@ -221,7 +219,7 @@ class LoginService {
   private sanitizeUserResponse(userResObj: any): any {
     const userResObjArray = Array.isArray(userResObj) ? userResObj : [userResObj];
     const sanitizedUserResObjArray = userResObjArray.map(user => {
-      const sanitizedUser = user instanceof mongoose.Document ? user.toObject() : user;
+      const sanitizedUser = user ? user.toObject() : user;
       delete sanitizedUser.password;
       delete sanitizedUser.isLocked;
       delete sanitizedUser.loginAttempt;

@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { IServiceResponse, IServiceResponseExtend } from "../interface/common.interface";
+import { IServiceResponse, IServiceResponseExtend } from "../interface";
 
 class ResponseInterceptor {
   public static handleResponse(res: Response, result: IServiceResponse): void {

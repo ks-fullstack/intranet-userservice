@@ -1,7 +1,6 @@
-import { AppConstants } from "../constants/app.constant";
-import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
-import { IUserFilter, IUserUpdate, UserFieldType } from "../interface/user.interface";
-import { userRepo, userProfileRepo } from "../repos";
+import { AppConstants } from "../constants";
+import { IAuthenticatedRequest, IServiceResponse, IUserFilter, IUserUpdate, UserFieldType } from "../interface";
+import { UserRepo, UserProfileRepo } from "../repos";
 import validationService from "./validation.service";
 
 class UserService {
@@ -9,7 +8,7 @@ class UserService {
     const recordId = req.params.id;
     const { fields } = req.query;
     const fieldSelection: UserFieldType = typeof fields === 'string' ? fields.split(",") as UserFieldType : [];
-    const resObj = await userRepo.getOne(recordId, fieldSelection);
+    const resObj = await UserRepo.getOne(recordId, fieldSelection);
     const result: IServiceResponse = {
       count: resObj ? 1 : 0,
       data: resObj,
@@ -22,7 +21,7 @@ class UserService {
     const { fields, filter } = req.query;
     const filterExp =  typeof filter === 'string' ? filter : "";
     const fieldSelection: UserFieldType = typeof fields === 'string' ? fields.split(",") as UserFieldType : [];
-    const resObj = await userRepo.getAll(filterExp, fieldSelection);
+    const resObj = await UserRepo.getAll(filterExp, fieldSelection);
     const result: IServiceResponse = {
       count: resObj.length,
       data: resObj,
@@ -34,7 +33,7 @@ class UserService {
   public async getCount(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     const { filter } = req.query;
     const filterExp =  typeof filter === 'string' ? filter : "";
-    const resObj = await userRepo.getCount(filterExp);
+    const resObj = await UserRepo.getCount(filterExp);
     const result: IServiceResponse = {
       count: resObj,
       data: resObj,
@@ -54,7 +53,7 @@ class UserService {
       req.body.createdBy = req.user;
     }
 
-    const resObj = await userRepo.create(req.body);
+    const resObj = await UserRepo.create(req.body);
     if(resObj) {
       //Create user profile
       resObj.forEach(user => {
@@ -67,7 +66,7 @@ class UserService {
           req.body.userRef = user._id;
         }
       });
-      await userProfileRepo.create(req.body);
+      await UserProfileRepo.create(req.body);
     }
     const result: IServiceResponse = {
       count: Array.isArray(resObj) ? resObj.length : 1,
@@ -84,7 +83,7 @@ class UserService {
     const filterExp: IUserFilter = req.body.filterExp || "";
     const requestedDataToUpdate: IUserUpdate = req.body.data || "";
     requestedDataToUpdate.updatedBy = req.user;
-    const resObj = await userRepo.update(filterExp, requestedDataToUpdate);
+    const resObj = await UserRepo.update(filterExp, requestedDataToUpdate);
     const result: IServiceResponse = {
       count: resObj.modifiedCount,
       data: resObj,
@@ -96,7 +95,7 @@ class UserService {
   public async delete(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     validationService.validateFiterExpression(req);
     const filterExp: IUserFilter = req.body.filterExp || "";
-    const resObj = await userRepo.delete(filterExp);
+    const resObj = await UserRepo.delete(filterExp);
     const result: IServiceResponse = {
       count: resObj.deletedCount,
       message: resObj.deletedCount + AppConstants.DeleteResponeMessage,

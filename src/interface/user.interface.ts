@@ -55,9 +55,4 @@ export interface IUserUpdate {
   [key: string]: any; // to handle mongoose $set, $unset and other operations
 }
 
-export interface ILogin {
-  userId: string;
-  password: string;
-}
-
 export type UserFieldType = Array<keyof IUser | '-_id'>;

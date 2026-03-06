@@ -1,7 +1,6 @@
-import { AppConstants } from "../constants/app.constant";
-import { IAuthenticatedRequest, IServiceResponse } from "../interface/common.interface";
-import { IRole, IRoleFilter, IRoleUpdate, RoleFieldType } from "../interface/role.interface";
-import { roleRepo } from "../repos";
+import { AppConstants } from "../constants";
+import { IAuthenticatedRequest, IRole, IRoleFilter, IRoleUpdate, IServiceResponse, RoleFieldType } from "../interface";
+import { RoleRepo } from "../repos";
 import CustomError from "../utils/custom-error.util";
 import validationService from "./validation.service";
 
@@ -10,7 +9,7 @@ class RoleService {
     const recordId = req.params.id;
     const { fields } = req.query;
     const fieldSelection: RoleFieldType = typeof fields === 'string' ? fields.split(",") as RoleFieldType : [];
-    const resObj = await roleRepo.getOne(recordId, fieldSelection);
+    const resObj = await RoleRepo.getOne(recordId, fieldSelection);
     const result: IServiceResponse = {
       count: resObj ? 1 : 0,
       data: resObj,
@@ -23,7 +22,7 @@ class RoleService {
     const { fields, filter } = req.query;
     const filterExp =  typeof filter === 'string' ? filter : "";
     const fieldSelection: RoleFieldType = typeof fields === 'string' ? fields.split(",") as RoleFieldType : [];
-    const resObj = await roleRepo.getAll(filterExp, fieldSelection);
+    const resObj = await RoleRepo.getAll(filterExp, fieldSelection);
     const result: IServiceResponse = {
       count: resObj.length,
       data: resObj,
@@ -34,7 +33,7 @@ class RoleService {
 
   public async getCount(req: IAuthenticatedRequest): Promise<IServiceResponse> {
     const filterExp = req.params.filter || "";
-    const resObj = await roleRepo.getCount(filterExp);
+    const resObj = await RoleRepo.getCount(filterExp);
     const result: IServiceResponse = {
       count: resObj,
       data: resObj,
@@ -54,7 +53,7 @@ class RoleService {
     } else {
       inputData.createdBy = req.user;
     }
-    const resObj = await roleRepo.create(inputData);
+    const resObj = await RoleRepo.create(inputData);
     const result: IServiceResponse = {
       count: Array.isArray(resObj) ? resObj.length : 1,
       data: resObj,
@@ -69,7 +68,7 @@ class RoleService {
     const filterExp: IRoleFilter = req.body.filterExp || "";
     const requestedDataToUpdate: IRoleUpdate = req.body.data || "";
     requestedDataToUpdate.updatedBy = req.user;
-    const resObj = await roleRepo.update(filterExp, requestedDataToUpdate);
+    const resObj = await RoleRepo.update(filterExp, requestedDataToUpdate);
     const result: IServiceResponse = {
       count: resObj.modifiedCount,
       data: resObj,
@@ -83,7 +82,7 @@ class RoleService {
     if (!filterExp || (filterExp && Object.keys(filterExp).length === 0)) {
       throw new CustomError(422, "Filter expression required");
     } else {
-      const resObj = await roleRepo.delete(filterExp);
+      const resObj = await RoleRepo.delete(filterExp);
       const result: IServiceResponse = {
         count: resObj.deletedCount,
         message: resObj.deletedCount + AppConstants.DeleteResponeMessage,

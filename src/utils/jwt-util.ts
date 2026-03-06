@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { IJWTVerifyToken } from "../interface/common.interface";
+import { IJWTVerifyToken } from "../interface";
 
 const jwtSecretKey: string = process.env.JWT_SECRET_KEY || "";
 
