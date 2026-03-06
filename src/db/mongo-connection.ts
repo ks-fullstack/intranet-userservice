@@ -1,5 +1,5 @@
 import mongoose, { Connection } from "mongoose";
-import { IDBSettings } from "../interface/config.interface";
+import { IDBSettings } from "../interface";
 import APIConfig from "../utils/config";
 
 type eventType = "connected" | "reconnected" | "disconnected"| "close" | "error";

@@ -1,4 +1,4 @@
-import { IRole, IRoleFilter, IRoleUpdate, RoleFieldType } from "../interface/role.interface";
+import { IRole, IRoleFilter, IRoleUpdate, RoleFieldType } from "../interface";
 import roleModel from "../models/role.model";
 
 class RoleRepo {

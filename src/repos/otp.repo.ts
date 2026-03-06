@@ -1,5 +1,5 @@
 import otp from "../models/otp.model";
-import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../interface/otp.interface";
+import { IOTP, IOTPFilter, IOTPUpdate, IVerifyOTP, OTPFieldType } from "../interface";
 
 class OTPRepo {
   private defaultSelectedFields: string = "-_id userId otp isVerified expiryTime ";

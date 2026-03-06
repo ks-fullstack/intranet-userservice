@@ -1,7 +1,6 @@
 import { NextFunction, Response } from "express";
 import jwt from "jsonwebtoken";
-import { IAuthenticatedRequest } from "../interface/common.interface";
-import { IBaseUser } from "../interface/user.interface";
+import { IAuthenticatedRequest, IBaseUser } from "../interface";
 import { getCookies } from "../utils/common.util";
 import { validateToken } from "../utils/jwt-util";
 import CustomError from "../utils/custom-error.util";

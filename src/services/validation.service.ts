@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { AppConstants } from "../constants/app.constant";
+import { AppConstants } from "../constants";
 import CustomError from "../utils/custom-error.util";
 
 class ValidationService {

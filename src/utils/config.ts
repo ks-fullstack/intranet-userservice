@@ -1,5 +1,5 @@
 import { readJSONFile } from "./common.util";
-import { IConfig } from "../interface/config.interface";
+import { IConfig } from "../interface";
 
 export class APIConfig {
   private static _instance: APIConfig = new APIConfig();

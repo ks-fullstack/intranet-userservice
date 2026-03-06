@@ -1,4 +1,4 @@
-import { IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldType } from "../interface/user-profile.interface";
+import { IUserProfile, IUserProfileFilter, IUserProfileUpdate, UserProfileFieldType } from "../interface";
 import userProfile from "../models/user-profile.model";
 
 class UserProfileRepo {

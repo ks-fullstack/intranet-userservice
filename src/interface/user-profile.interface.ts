@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import { Gender } from "../constants/app.enum";
+import { Gender } from "../constants";
 import { IBaseUser } from "./user.interface";
 
 export interface IUserProfile extends IBaseUser, Document {

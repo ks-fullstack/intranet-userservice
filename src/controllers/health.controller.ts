@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { IServiceResponse } from "../interface/common.interface";
+import { IServiceResponse } from "../interface";
 import APIConfig from "../utils/config";
 import { ResponseInterceptor } from "../interceptors";
 
