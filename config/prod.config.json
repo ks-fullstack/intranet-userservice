@@ -18,7 +18,9 @@
     "retryWrites": true,
     "ssl": true,
     "appname": "MongoDB%20Compass",
-    "replicaSet": "atlas-ua1jyo-shard-0"
+    "replicaSet": "atlas-ua1jyo-shard-0",
+    "maxPoolSize": 200,
+    "minPoolSize": 20
   },
   "jwtSettings": {
     "expiresInHours": "1",

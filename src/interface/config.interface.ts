@@ -26,6 +26,8 @@ export interface IDBSettings extends ConnectOptions {
   retryWrites: boolean;
   socketTimeoutMS: number;
   ssl: boolean;
+  maxPoolSize: number;
+  minPoolSize: number;
 }
 
 export interface ISecuritySettings {
