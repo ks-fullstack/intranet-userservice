@@ -2,7 +2,6 @@
   "apiBasePath": "/userservice/api",
   "dbConnectionStr": "mongodb+srv://$username$:$password$@cluster0.nse481o.mongodb.net/$dbname$",
   "dbName": "intranet",
-  "disableLogs": false,
   "otpExpiresInMin": 5,
   "verificationLinkExpiresInHours": 24,
   "cookieSettings": {
@@ -18,7 +17,9 @@
     "retryWrites": true,
     "ssl": true,
     "appname": "MongoDB%20Compass",
-    "replicaSet": "atlas-ua1jyo-shard-0"
+    "replicaSet": "atlas-ua1jyo-shard-0",
+    "maxPoolSize": 100,
+    "minPoolSize": 10
   },
   "jwtSettings": {
     "expiresInHours": "1",
@@ -33,6 +34,14 @@
     "requestBodyMaxSizeInMB": 10
   },
   "serviceName": "userservice",
+  "auditSettings": {
+    "enabled": true,
+    "logToFile": true,
+    "logToDatabase": false,
+    "logFilePath": "./logs/audit.log",
+    "logFileMaxSizeInMB": 100,
+    "flushQueueIntervalInSeconds": 5
+  },
   "externalApisConfig": {
     "sendEmailApi": {
       "baseUrl": "http://localhost:5002/utilservice/api/email/internal/send",

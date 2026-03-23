@@ -9,11 +9,7 @@ class RequestInterceptor {
     res: Response,
     next: NextFunction,
   ): void {
-    auditService.logRequest(
-      req,
-      APIConfig.config.serviceName,
-      APIConfig.config.disableLogs,
-    );
+    auditService.logRequest(req);
     next();
   }
 

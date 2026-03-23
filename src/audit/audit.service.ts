@@ -1,39 +1,78 @@
 import { Request } from "express";
 import IAudit from "./audit.interface";
 import auditRepo from "./audit.repo";
+import APIConfig from "../utils/config";
+import AuditLogger from "./audit-logger.util";
 
 class AuditService {
-  public logRequest(req: Request, serviceName: string, disabelLogs: boolean = false) {
-    if (process.env.TEST_ENV === "0" || !disabelLogs) {
+  private auditLogger: AuditLogger;
+
+  constructor() {
+    this.auditLogger = new AuditLogger(
+      APIConfig.config.auditSettings.logFilePath,
+      APIConfig.config.auditSettings.logFileMaxSizeInMB
+    );
+  }
+
+  public logRequest(req: Request) {
+    if (process.env.TEST_ENV === "0" && APIConfig.config.auditSettings.enabled) {
       const inputData: IAudit = {
-        reqPayload : req.body,
-        reqType : req.method,
-        reqUrl : req.originalUrl,
-        serviceName,
+        reqPayload: req.body,
+        reqType: req.method,
+        reqUrl: req.originalUrl,
+        serviceName: APIConfig.config.serviceName,
       };
-      try {
-        auditRepo.create(inputData);
-      } catch (err) {
-        throw new Error((err as Error).message);
-      }
+
+      // Fire-and-forget: Log to file asynchronously (non-blocking)
+      this.logAsync(inputData);
     }
   }
 
-  public logWarning(message: string, req: Request, serviceName: string, disabelLogs: boolean = false) {
-    if (process.env.TEST_ENV === "0" || !disabelLogs) {
-      const inputData: IAudit = {
-        reqPayload : req.body,
-        reqType : req.method,
-        reqUrl : req.originalUrl,
-        serviceName,
-        message
-      };
+  private async logAsync(inputData: IAudit): Promise<void> {
+    const settings = APIConfig.config.auditSettings;
+
+    // Log to file if enabled (primary, always fast)
+    if (settings.logToFile) {
       try {
-        auditRepo.create(inputData);
+        await this.auditLogger.logAsync({
+          timestamp: new Date().toISOString(),
+          serviceName: inputData.serviceName,
+          reqUrl: inputData.reqUrl,
+          reqType: inputData.reqType,
+          reqPayload: inputData.reqPayload,
+          message: inputData.message,
+          createdBy: inputData.createdBy,
+        });
       } catch (err) {
-        throw new Error((err as Error).message);
+        console.error("Failed to log to file:", (err as Error).message);
       }
     }
+
+    // Log to database in background (non-blocking, set and forget)
+    if (settings.logToDatabase) {
+      setImmediate(() => {
+        try {
+          auditRepo.create(inputData).catch((err) => {
+            console.error("Failed to log to database:", (err as Error).message);
+          });
+        } catch (err) {
+          console.error("Error queuing database audit log:", (err as Error).message);
+        }
+      });
+    }
+  }
+
+  public async getAuditLogs(limit?: number): Promise<any[]> {
+    return this.auditLogger.readLogs(limit);
+  }
+
+  public async cleanupOldLogs(): Promise<void> {
+    const retentionDays = APIConfig.config.auditSettings.logFileRetentionDays;
+    await this.auditLogger.cleanupOldLogs(retentionDays);
+  }
+
+  public stopLogger(): void {
+    this.auditLogger.stopFlushInterval();
   }
 }
 

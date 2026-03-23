@@ -1,15 +1,25 @@
 import { CookieOptions } from "express";
 import { ConnectOptions } from "mongoose";
 
+export interface IAuditSettings {
+  enabled: boolean;
+  logToFile: boolean;
+  logToDatabase: boolean;
+  logFilePath: string;
+  logFileMaxSizeInMB: number;
+  logFileRetentionDays: number;
+  flushQueueIntervalInSeconds: number;
+}
+
 export interface IConfig {
   apiBasePath: string;
+  auditSettings: IAuditSettings;
   cookieSettings: CookieOptions;
   dbConnectionStr: string;
   dbName: string;
   dbUsername: string;
   dbPassword: string;
   dbSettings: IDBSettings;
-  disableLogs: boolean;
   otpExpiresInMin: number;
   jwtSettings: IJWTSettings;
   securitySettings: ISecuritySettings;
@@ -26,6 +36,8 @@ export interface IDBSettings extends ConnectOptions {
   retryWrites: boolean;
   socketTimeoutMS: number;
   ssl: boolean;
+  maxPoolSize: number;
+  minPoolSize: number;
 }
 
 export interface ISecuritySettings {

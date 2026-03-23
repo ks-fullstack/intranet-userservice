@@ -13,3 +13,13 @@ export default interface IAudit {
     message?: string;
     createdBy?: IUser;
 }
+
+export interface AuditLogEntry {
+  timestamp: string;
+  serviceName: string;
+  reqUrl: string;
+  reqType: string;
+  reqPayload?: object;
+  message?: string;
+  createdBy?: IUser;
+}
