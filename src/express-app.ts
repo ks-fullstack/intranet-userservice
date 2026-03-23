@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDoc from "./docs/swagger";
 import cors from "cors";
 import compression from "compression";
+import auditService from "./audit/audit.service";
 
 class ExpressApp {
   private static _instance: ExpressApp = new ExpressApp();
@@ -60,6 +61,25 @@ class ExpressApp {
     
     // Swagger UI
     this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
+    // Schedule daily cleanup of old audit logs
+    this.scheduleAuditLogCleanup();
+  }
+
+  /**
+   * Schedule audit log cleanup to run daily
+   */
+  private scheduleAuditLogCleanup(): void {
+    // Run cleanup every 24 hours
+    setInterval(() => {
+      auditService
+        .cleanupOldLogs()
+        .catch((err) => {
+          console.error("Error during audit log cleanup:", err);
+        });
+    }, 24 * 60 * 60 * 1000);
+
+    console.log("Audit log cleanup scheduled to run daily");
   }
 }
 
