@@ -6,7 +6,10 @@ This project is a Node.js based intranet user service that provides functionalit
 - User registration, verification and authentication
 - Role-based access control
 - One-time password (OTP) generation, sending and verification (send/verify endpoints)
-- RESTful API endpoints
+- Audit logging for critical operations (audit service + repo)
+- Change stream service for real-time update tracking
+- RESTful API endpoints for users, profiles, roles, login and OTP
+- JWT-based auth and middleware enforcement
 - Automated testing with Mocha and Chai
 - Environment-specific configurations
 - Swagger API documentation
@@ -89,6 +92,20 @@ Application configuration files are located in the `config/` directory:
 - **config/prod.config.json**: Production configuration
 
 Each configuration file contains environment-specific settings that control application behavior, API endpoints, database connections, and other critical parameters. The appropriate configuration is loaded based on the `NODE_ENV` variable.
+
+## Audit log settings
+
+The application has built-in audit logging with both file-based and database-backed options. These settings are defined under `auditSettings` in `config/*.config.json`.
+
+- `enabled` (boolean): Enable or disable audit logging globally.
+- `logToFile` (boolean): If true, logs are written to a rolling file (via `AuditLogger`).
+- `logToDatabase` (boolean): If true, logs are saved to the `audit` MongoDB collection.
+- `logFilePath` (string): Path to the audit log file (commonly `./logs/audit.log`).
+- `logFileMaxSizeInMB` (number): Max file size before rollover.
+- `logFileRetentionDays` (number): Days to keep old log files before cleanup.
+- `flushQueueIntervalInSeconds` (number): Interval in seconds for queued in-memory logs to flush to disk.
+
+> Note: In tests, the audit log is often disabled via `TEST_ENV` (especially when `TEST_ENV=1`).
 
 ## Testing
 To run the tests, use the command `npm run test`. This will execute all test cases defined in the `specs` directory.
