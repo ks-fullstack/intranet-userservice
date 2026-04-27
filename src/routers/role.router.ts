@@ -1,7 +1,7 @@
 import { Router } from "express";
 import roleController from "../controllers/role.controller";
-import { validateRequest } from "../middleware/auth.middleware";
-import { authorizeRoles } from "../middleware/access-control.middleware";
+import { validateRequest } from "../middlewares/auth.middleware";
+import { authorizeRoles } from "../middlewares/access-control.middleware";
 
 class RoleRoutes {
   public readonly router: Router = Router();

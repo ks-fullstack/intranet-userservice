@@ -1,7 +1,7 @@
 import { Router } from "express";
 import otpController from "../controllers/otp.controller";
-import { validateRequest } from "../middleware/auth.middleware";
-import { authorizeRoles } from "../middleware/access-control.middleware";
+import { validateRequest } from "../middlewares/auth.middleware";
+import { authorizeRoles } from "../middlewares/access-control.middleware";
 
 class OTPRoutes {
   public readonly router: Router = Router();

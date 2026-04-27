@@ -4,7 +4,7 @@ import MongoConnection from "./db/mongo-connection";
 import Routes from "./routers/router";
 import APIConfig from "./utils/config";
 import { RequestInterceptor, ErrorInterceptor } from "./interceptors";
-import SecurityMiddleware from "./middleware/security.middleware";
+import SecurityMiddleware from "./middlewares/security.middleware";
 import { watchUserCollection } from "./services/change-stream.service";
 import swaggerUi from "swagger-ui-express";
 import swaggerDoc from "./docs/swagger";
