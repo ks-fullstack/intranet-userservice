@@ -161,7 +161,7 @@ The project is organized into the following directories:
   - `docs/`: API documentation files
   - `interceptors/`: Request and error interceptors
   - `interfaces/`: TypeScript interfaces and types
-  - `middleware/`: Custom middleware functions
+  - `middlewares/`: Custom middleware functions
   - `models/`: Data models and schemas
   - `routers/`: Route definitions
   - `services/`: Business logic and services

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import loginController from "../controllers/login.controller";
 import userController from "../controllers/user.controller";
-import { authorizeRoles } from "../middleware/access-control.middleware";
-import { validateRequest } from "../middleware/auth.middleware";
+import { authorizeRoles } from "../middlewares/access-control.middleware";
+import { validateRequest } from "../middlewares/auth.middleware";
 
 class UserRoutes {
   public readonly router: Router = Router();
